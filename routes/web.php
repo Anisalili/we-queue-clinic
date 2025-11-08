@@ -181,12 +181,27 @@ Route::middleware("auth")->group(function () {
     Route::prefix("patient")
         ->name("patient.")
         ->group(function () {
-            Route::get("/register", function () {
-                return view("patient.register");
-            })
+            // Walk-in registration (Admin only)
+            Route::get("/register", [
+                \App\Http\Controllers\PatientController::class,
+                "register",
+            ])
                 ->middleware("permission:patient.register")
                 ->name("register");
+
+            Route::post("/store-walkin", [
+                \App\Http\Controllers\PatientController::class,
+                "storeWalkin",
+            ])
+                ->middleware("permission:patient.register")
+                ->name("store-walkin");
         });
+
+    // API routes for patient search
+    Route::get("/api/patients/search", [
+        \App\Http\Controllers\PatientController::class,
+        "search",
+    ])->middleware("auth");
 
     // Schedule routes (permission-based)
     Route::prefix("schedules")
