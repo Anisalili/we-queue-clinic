@@ -268,12 +268,43 @@ Route::middleware("auth")->group(function () {
     // Report routes (permission-based)
     Route::prefix("report")
         ->name("report.")
+        ->middleware("permission:report.view")
         ->group(function () {
-            Route::get("/", function () {
-                return view("report.index");
-            })
-                ->middleware("permission:report.view")
-                ->name("index");
+            Route::get("/", [
+                \App\Http\Controllers\ReportController::class,
+                "index",
+            ])->name("index");
+
+            // AJAX endpoints
+            Route::get("/summary", [
+                \App\Http\Controllers\ReportController::class,
+                "summary",
+            ])->name("summary");
+
+            Route::get("/detailed", [
+                \App\Http\Controllers\ReportController::class,
+                "detailed",
+            ])->name("detailed");
+
+            Route::get("/performance", [
+                \App\Http\Controllers\ReportController::class,
+                "performance",
+            ])->name("performance");
+
+            // Export routes
+            Route::get("/export-excel", [
+                \App\Http\Controllers\ReportController::class,
+                "exportExcel",
+            ])
+                ->middleware("permission:report.export")
+                ->name("export.excel");
+
+            Route::get("/export-pdf", [
+                \App\Http\Controllers\ReportController::class,
+                "exportPdf",
+            ])
+                ->middleware("permission:report.export")
+                ->name("export.pdf");
         });
 
     // User Management routes (permission-based)

@@ -32,42 +32,42 @@
             </div>
         </div>
         <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-warning bg-opacity-10">
+            <div class="card bg-warning">
                 <div class="card-body px-3 py-4">
-                    <h6 class="text-warning font-semibold mb-0">Menunggu</h6>
-                    <h3 class="font-extrabold mb-0 text-warning" id="stat-waiting">{{ $stats['waiting'] }}</h3>
+                    <h6 class="text-white font-semibold mb-0">Menunggu</h6>
+                    <h3 class="font-extrabold mb-0 text-white" id="stat-waiting">{{ $stats['waiting'] }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-primary bg-opacity-10">
+            <div class="card bg-primary">
                 <div class="card-body px-3 py-4">
-                    <h6 class="text-primary font-semibold mb-0">Berlangsung</h6>
-                    <h3 class="font-extrabold mb-0 text-primary" id="stat-serving">{{ $stats['serving'] }}</h3>
+                    <h6 class="text-white font-semibold mb-0">Berlangsung</h6>
+                    <h3 class="font-extrabold mb-0 text-white" id="stat-serving">{{ $stats['serving'] }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-success bg-opacity-10">
+            <div class="card bg-success">
                 <div class="card-body px-3 py-4">
-                    <h6 class="text-success font-semibold mb-0">Selesai</h6>
-                    <h3 class="font-extrabold mb-0 text-success" id="stat-completed">{{ $stats['completed'] }}</h3>
+                    <h6 class="text-white font-semibold mb-0">Selesai</h6>
+                    <h3 class="font-extrabold mb-0 text-white" id="stat-completed">{{ $stats['completed'] }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-success bg-opacity-10">
+            <div class="card bg-success">
                 <div class="card-body px-3 py-4">
-                    <h6 class="text-success font-semibold mb-0">BPJS</h6>
-                    <h3 class="font-extrabold mb-0 text-success">{{ $stats['bpjs_today'] }}</h3>
+                    <h6 class="text-white font-semibold mb-0">BPJS</h6>
+                    <h3 class="font-extrabold mb-0 text-white">{{ $stats['bpjs_today'] }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-primary bg-opacity-10">
+            <div class="card bg-info">
                 <div class="card-body px-3 py-4">
-                    <h6 class="text-primary font-semibold mb-0">Umum</h6>
-                    <h3 class="font-extrabold mb-0 text-primary">{{ $stats['umum_today'] }}</h3>
+                    <h6 class="text-white font-semibold mb-0">Umum</h6>
+                    <h3 class="font-extrabold mb-0 text-white">{{ $stats['umum_today'] }}</h3>
                 </div>
             </div>
         </div>
@@ -85,9 +85,9 @@
                 @if($servingNow)
                 <div class="row align-items-center py-3">
                     <div class="col-12 col-md-3 text-center mb-3 mb-md-0">
-                        <div class="bg-primary bg-opacity-10 rounded p-4">
-                            <p class="text-muted mb-1">Nomor Antrian</p>
-                            <h1 class="display-1 fw-bold text-primary mb-0">{{ $servingNow->formatted_queue_number }}</h1>
+                        <div class="bg-primary rounded p-4">
+                            <p class="text-white mb-1 fw-bold">Nomor Antrian</p>
+                            <h1 class="display-1 fw-bold text-white mb-0">{{ $servingNow->formatted_queue_number }}</h1>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 mb-3 mb-md-0">
@@ -163,8 +163,8 @@
     <!-- Waiting Queue -->
     <section class="section">
         <div class="card">
-            <div class="card-header bg-warning bg-opacity-10">
-                <h4 class="card-title mb-0 text-warning">
+            <div class="card-header bg-warning">
+                <h4 class="card-title mb-0 text-white">
                     <i class="bi bi-hourglass-split"></i> Antrian Menunggu ({{ $waitingQueue->count() }})
                 </h4>
             </div>
@@ -172,7 +172,7 @@
                 @if($waitingQueue->count() > 0)
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <thead>
+                        <thead class="table-light">
                             <tr>
                                 <th width="15%">No. Antrian</th>
                                 <th>Pasien</th>
@@ -185,7 +185,7 @@
                             @foreach($waitingQueue as $queue)
                             <tr>
                                 <td>
-                                    <h3 class="mb-0 text-warning">{{ $queue->formatted_queue_number }}</h3>
+                                    <span class="badge bg-warning fs-4 px-3 py-2">{{ $queue->formatted_queue_number }}</span>
                                 </td>
                                 <td>
                                     <strong>{{ $queue->user->name }}</strong>
@@ -287,8 +287,8 @@
         <!-- Not Checked In -->
         <div class="col-12 col-lg-4">
             <div class="card">
-                <div class="card-header bg-secondary bg-opacity-10">
-                    <h6 class="card-title mb-0">
+                <div class="card-header bg-secondary">
+                    <h6 class="card-title mb-0 text-white">
                         <i class="bi bi-clock"></i> Belum Check-in ({{ $notCheckedIn->count() }})
                     </h6>
                 </div>
@@ -319,8 +319,8 @@
         <!-- Completed Today -->
         <div class="col-12 col-lg-4">
             <div class="card">
-                <div class="card-header bg-success bg-opacity-10">
-                    <h6 class="card-title mb-0 text-success">
+                <div class="card-header bg-success">
+                    <h6 class="card-title mb-0 text-white">
                         <i class="bi bi-check-circle"></i> Selesai ({{ $completed->count() }})
                     </h6>
                 </div>
@@ -344,8 +344,8 @@
         <!-- Cancelled Today -->
         <div class="col-12 col-lg-4">
             <div class="card">
-                <div class="card-header bg-danger bg-opacity-10">
-                    <h6 class="card-title mb-0 text-danger">
+                <div class="card-header bg-danger">
+                    <h6 class="card-title mb-0 text-white">
                         <i class="bi bi-x-circle"></i> Dibatalkan ({{ $cancelled->count() }})
                     </h6>
                 </div>

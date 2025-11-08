@@ -93,6 +93,21 @@ class Booking extends Model
         return $query->where("patient_category", "umum");
     }
 
+    public function scopeDateRange($query, $startDate, $endDate)
+    {
+        return $query->whereBetween("booking_date", [$startDate, $endDate]);
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where("status", "selesai");
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where("status", "batal");
+    }
+
     /**
      * Accessors
      */
@@ -281,5 +296,97 @@ class Booking extends Model
             "available_slots" => $availableSlots,
             "schedule" => $schedule,
         ];
+    }
+
+    /**
+     * Report helper methods
+     */
+    public static function getBookingSuccessRate($startDate, $endDate)
+    {
+        $total = self::dateRange($startDate, $endDate)->count();
+        $success = self::dateRange($startDate, $endDate)
+            ->where("status", "selesai")
+            ->count();
+
+        return $total > 0 ? round(($success / $total) * 100, 2) : 0;
+    }
+
+    public static function getCancellationRate($startDate, $endDate)
+    {
+        $total = self::dateRange($startDate, $endDate)->count();
+        $cancelled = self::dateRange($startDate, $endDate)
+            ->where("status", "batal")
+            ->count();
+
+        return $total > 0 ? round(($cancelled / $total) * 100, 2) : 0;
+    }
+
+    public static function getNoShowRate($startDate, $endDate)
+    {
+        $onlineBookings = self::dateRange($startDate, $endDate)
+            ->where("booking_type", "online")
+            ->count();
+
+        $noShow = self::dateRange($startDate, $endDate)
+            ->where("booking_type", "online")
+            ->where("status", "batal")
+            ->whereNotNull("cancelled_at")
+            ->count();
+
+        return $onlineBookings > 0
+            ? round(($noShow / $onlineBookings) * 100, 2)
+            : 0;
+    }
+
+    public static function getAverageServiceTime(
+        $startDate,
+        $endDate,
+        $category = null,
+    ) {
+        $query = self::dateRange($startDate, $endDate)
+            ->whereNotNull("service_start_time")
+            ->whereNotNull("service_end_time");
+
+        if ($category) {
+            $query->where("patient_category", $category);
+        }
+
+        $bookings = $query->get();
+
+        if ($bookings->isEmpty()) {
+            return 0;
+        }
+
+        $totalMinutes = $bookings->sum(function ($booking) {
+            return $booking->service_duration;
+        });
+
+        return round($totalMinutes / $bookings->count(), 2);
+    }
+
+    public static function getSlotUtilization($startDate, $endDate)
+    {
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        $totalSlots = 0;
+        $usedSlots = 0;
+
+        // Calculate total available slots for date range
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $schedule = self::getScheduleForDate($date);
+
+            if (!$schedule["is_closed"]) {
+                $totalSlots += $schedule["max_slots"];
+
+                $used = self::whereDate("booking_date", $date)
+                    ->whereNotIn("status", ["batal"])
+                    ->count();
+
+                $usedSlots += $used;
+            }
+        }
+
+        return $totalSlots > 0 ? round(($usedSlots / $totalSlots) * 100, 2) : 0;
     }
 }
