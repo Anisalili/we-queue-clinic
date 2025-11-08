@@ -56,23 +56,76 @@ Route::middleware("auth")->group(function () {
     Route::prefix("booking")
         ->name("booking.")
         ->group(function () {
-            Route::get("/", function () {
-                return view("booking.index");
-            })
+            // Admin/Owner - View all bookings
+            Route::get("/", [
+                \App\Http\Controllers\BookingController::class,
+                "index",
+            ])
                 ->middleware("permission:booking.view.all")
                 ->name("index");
 
-            Route::get("/create", function () {
-                return view("booking.create");
-            })
+            // Patient - Create booking
+            Route::get("/create", [
+                \App\Http\Controllers\BookingController::class,
+                "create",
+            ])
                 ->middleware("permission:booking.create")
                 ->name("create");
 
-            Route::get("/mine", function () {
-                return view("booking.mine");
-            })
+            Route::post("/", [
+                \App\Http\Controllers\BookingController::class,
+                "store",
+            ])
+                ->middleware("permission:booking.create")
+                ->name("store");
+
+            // Patient - My bookings
+            Route::get("/mine", [
+                \App\Http\Controllers\BookingController::class,
+                "mine",
+            ])
                 ->middleware("permission:booking.view.own")
                 ->name("mine");
+
+            // View specific booking
+            Route::get("/{booking}", [
+                \App\Http\Controllers\BookingController::class,
+                "show",
+            ])->name("show");
+
+            // Cancel booking
+            Route::post("/{booking}/cancel", [
+                \App\Http\Controllers\BookingController::class,
+                "cancel",
+            ])->name("cancel");
+
+            // Admin/Owner actions
+            Route::post("/{booking}/check-in", [
+                \App\Http\Controllers\BookingController::class,
+                "checkIn",
+            ])
+                ->middleware("permission:booking.update")
+                ->name("check-in");
+
+            Route::post("/{booking}/start-service", [
+                \App\Http\Controllers\BookingController::class,
+                "startService",
+            ])
+                ->middleware("permission:queue.manage")
+                ->name("start-service");
+
+            Route::post("/{booking}/finish-service", [
+                \App\Http\Controllers\BookingController::class,
+                "finishService",
+            ])
+                ->middleware("permission:queue.manage")
+                ->name("finish-service");
+
+            // AJAX endpoint for checking slots
+            Route::post("/check-slots", [
+                \App\Http\Controllers\BookingController::class,
+                "checkSlots",
+            ])->name("check-slots");
         });
 
     // Queue routes (permission-based)
