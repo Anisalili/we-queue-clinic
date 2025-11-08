@@ -132,11 +132,49 @@ Route::middleware("auth")->group(function () {
     Route::prefix("queue")
         ->name("queue.")
         ->group(function () {
-            Route::get("/", function () {
-                return view("queue.index");
-            })
+            // Queue dashboard (Admin/Owner)
+            Route::get("/", [
+                \App\Http\Controllers\QueueController::class,
+                "index",
+            ])
                 ->middleware("permission:queue.view")
                 ->name("index");
+
+            // Public queue display (TV screen)
+            Route::get("/display", [
+                \App\Http\Controllers\QueueController::class,
+                "display",
+            ])->name("display");
+
+            // Queue actions
+            Route::post("/call-next", [
+                \App\Http\Controllers\QueueController::class,
+                "callNext",
+            ])
+                ->middleware("permission:queue.manage")
+                ->name("call-next");
+
+            Route::post("/{booking}/call", [
+                \App\Http\Controllers\QueueController::class,
+                "callSpecific",
+            ])
+                ->middleware("permission:queue.manage")
+                ->name("call-specific");
+
+            Route::post("/{booking}/skip", [
+                \App\Http\Controllers\QueueController::class,
+                "skip",
+            ])
+                ->middleware("permission:queue.manage")
+                ->name("skip");
+
+            // AJAX endpoint for real-time updates
+            Route::get("/data", [
+                \App\Http\Controllers\QueueController::class,
+                "getData",
+            ])
+                ->middleware("permission:queue.view")
+                ->name("data");
         });
 
     // Patient routes (permission-based)
