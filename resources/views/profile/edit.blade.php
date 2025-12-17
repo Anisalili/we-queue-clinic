@@ -77,7 +77,7 @@
 
     <div class="col-12 col-lg-8">
         <!-- Update Profile Information -->
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header">
                 <h4 class="card-title">Update Informasi Profil</h4>
             </div>
@@ -86,27 +86,41 @@
             </div>
         </div>
 
-        <!-- Update Password -->
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Update Password</h4>
+        <div class="row g-4">
+            <!-- Update Password -->
+            <div class="col-12 col-xl-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h4 class="card-title">Update Password</h4>
+                    </div>
+                    <div class="card-body">
+                        @include('profile.partials.update-password-form')
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @include('profile.partials.update-password-form')
-            </div>
-        </div>
 
-        <!-- Delete Account (Only for patients) -->
-        @if($user->hasRole('patient'))
-        <div class="card border-danger">
-            <div class="card-header bg-danger bg-opacity-10">
-                <h4 class="card-title text-danger mb-0">Hapus Akun</h4>
+            <!-- Delete Account (Only for patients) -->
+            @if($user->hasRole('patient'))
+            <div class="col-12 col-xl-6">
+                <div class="card h-100 border-danger-subtle">
+                    <div class="card-header bg-danger bg-opacity-10 border-danger-subtle">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <h4 class="card-title text-danger mb-0">Hapus Akun</h4>
+                                <small class="text-muted">Data akan dihapus permanen</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @include('profile.partials.delete-user-form')
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @include('profile.partials.delete-user-form')
-            </div>
+            @endif
         </div>
-        @endif
     </div>
 </section>
 @endsection

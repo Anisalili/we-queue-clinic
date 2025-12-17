@@ -4,11 +4,48 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\DashboardV1Controller;
 use App\Http\Controllers\Dashboard\DashboardV2Controller;
 use App\Http\Controllers\Dashboard\DashboardV3Controller;
+use App\Http\Controllers\LandingController;
+use App\Models\Booking;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", function () {
-    return view("welcome");
-});
+Route::get("/", [LandingController::class, "index"])->name("landing");
+
+Route::get("/landing/metrics", function () {
+    $today = Carbon::today(config("app.timezone"));
+
+    $totalPatients = User::role("patient")->count();
+    $bookingToday = Booking::whereDate("booking_date", $today)
+        ->whereIn("status", ["booking", "menunggu", "berlangsung"])
+        ->count();
+    $waitingCount = Booking::whereDate("booking_date", $today)
+        ->where("status", "menunggu")
+        ->count();
+    $slotsAvailable = Booking::getAvailableSlots($today);
+
+    $schedule = Booking::getScheduleForDate($today);
+    $startTime = $schedule["start_time"] ?? null;
+    $endTime = $schedule["end_time"] ?? null;
+
+    return response()->json([
+        "date" => $today->toDateString(),
+        "total_patients" => $totalPatients,
+        "booking_today" => $bookingToday,
+        "waiting_count" => $waitingCount,
+        "slots_available" => $slotsAvailable,
+        "schedule" => [
+            "is_closed" => $schedule["is_closed"] ?? false,
+            "start_time" => $startTime
+                ? Carbon::parse($startTime)->format("H:i")
+                : null,
+            "end_time" => $endTime
+                ? Carbon::parse($endTime)->format("H:i")
+                : null,
+            "reason" => $schedule["reason"] ?? null,
+        ],
+    ]);
+})->name("landing.metrics");
 
 // Redirect /dashboard based on user permissions
 Route::get("/dashboard", function () {

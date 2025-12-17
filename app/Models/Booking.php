@@ -241,7 +241,9 @@ class Booking extends Model
 
     public static function canBookDate($date, $userId = null)
     {
-        $carbonDate = Carbon::parse($date);
+        $timezone = config("app.timezone", "UTC");
+        $carbonDate = Carbon::parse($date, $timezone);
+        $now = Carbon::now($timezone);
 
         // Check if date is in the past
         if ($carbonDate->isPast() && !$carbonDate->isToday()) {
@@ -266,6 +268,24 @@ class Booking extends Model
                 "can_book" => false,
                 "reason" => $schedule["reason"] ?? "Klinik tutup",
             ];
+        }
+
+        // If booking for today and clinic has closed, prevent booking
+        if ($carbonDate->isToday() && !empty($schedule["end_time"])) {
+            $closingTime = $carbonDate
+                ->copy()
+                ->setTimeFromTimeString(
+                    Carbon::parse($schedule["end_time"], $timezone)->format(
+                        "H:i:s",
+                    ),
+                );
+
+            if ($now->greaterThan($closingTime)) {
+                return [
+                    "can_book" => false,
+                    "reason" => "Jam operasional hari ini sudah berakhir",
+                ];
+            }
         }
 
         // Check available slots

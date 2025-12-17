@@ -1,11 +1,10 @@
-<div class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle"></i>
-    <strong>Peringatan!</strong> Setelah akun dihapus, semua data dan informasi akan dihapus secara permanen.
-</div>
+<p class="mb-3 text-muted">
+    Setelah akun dihapus, semua data dan informasi akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.
+</p>
 
-<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmUserDeletionModal">
+<button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#confirmUserDeletionModal">
     <i class="bi bi-trash"></i> Hapus Akun
-</button>
+  </button>
 
 <!-- Modal -->
 <div class="modal fade" id="confirmUserDeletionModal" tabindex="-1" aria-labelledby="confirmUserDeletionModalLabel" aria-hidden="true">

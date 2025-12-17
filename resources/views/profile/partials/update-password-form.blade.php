@@ -1,11 +1,6 @@
-<form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+<form method="post" action="{{ route('password.update') }}">
     @csrf
     @method('put')
-
-    <div class="alert alert-info">
-        <i class="bi bi-info-circle"></i>
-        Pastikan menggunakan password yang panjang dan acak untuk keamanan akun Anda.
-    </div>
 
     <div class="mb-3">
         <label for="update_password_current_password" class="form-label">
@@ -54,7 +49,7 @@
     </div>
 
     <div class="d-flex align-items-center gap-3">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary w-100">
             <i class="bi bi-shield-check"></i> Update Password
         </button>
 

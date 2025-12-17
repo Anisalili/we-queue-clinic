@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Booking;
 
 class DashboardV1Controller extends Controller
 {
@@ -13,13 +13,51 @@ class DashboardV1Controller extends Controller
      */
     public function index()
     {
-        // Patient dashboard: show own bookings, queue status
-        return view('dashboard.v1', [
-            'user' => auth()->user(),
-            // TODO: Add patient-specific data
-            // - Active bookings
-            // - Queue position
-            // - Booking history
+        $user = auth()->user();
+        $today = today();
+
+        $activeBooking = Booking::where("user_id", $user->id)
+            ->whereDate("booking_date", $today)
+            ->whereIn("status", ["booking", "menunggu", "berlangsung"])
+            ->orderBy("queue_number")
+            ->first();
+
+        $activeBookingCount = Booking::where("user_id", $user->id)
+            ->whereIn("status", ["booking", "menunggu", "berlangsung"])
+            ->count();
+
+        $totalVisits = Booking::where("user_id", $user->id)
+            ->where("status", "selesai")
+            ->count();
+
+        $servingNow = Booking::with("user")
+            ->whereDate("booking_date", $today)
+            ->where("status", "berlangsung")
+            ->first();
+
+        $waitingQueue = Booking::with("user")
+            ->whereDate("booking_date", $today)
+            ->where("status", "menunggu")
+            ->orderBy("queue_number")
+            ->get();
+
+        $queueAhead = $activeBooking
+            ? Booking::whereDate("booking_date", $today)
+                ->whereIn("status", ["menunggu", "berlangsung"])
+                ->where("queue_number", "<", $activeBooking->queue_number)
+                ->count()
+            : null;
+
+        $upcomingQueue = $waitingQueue->take(5);
+
+        return view("dashboard.v1", [
+            "user" => $user,
+            "activeBooking" => $activeBooking,
+            "activeBookingCount" => $activeBookingCount,
+            "totalVisits" => $totalVisits,
+            "servingNow" => $servingNow,
+            "upcomingQueue" => $upcomingQueue,
+            "queueAhead" => $queueAhead,
         ]);
     }
 }
