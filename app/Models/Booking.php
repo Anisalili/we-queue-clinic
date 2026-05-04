@@ -140,17 +140,8 @@ class Booking extends Model
 
     public function getCanCancelAttribute()
     {
-        // Patient can cancel if:
-        // 1. Status is 'booking'
-        // 2. Booking date is at least 2 hours from now
-        if ($this->status !== "booking") {
-            return false;
-        }
-
-        $bookingDateTime = Carbon::parse($this->booking_date);
-        $minCancelTime = now()->addHours(2);
-
-        return $bookingDateTime->isAfter($minCancelTime);
+        // Patient can cancel as long as they haven't checked in (status is still 'booking')
+        return $this->status === "booking";
     }
 
     public function getServiceDurationAttribute()

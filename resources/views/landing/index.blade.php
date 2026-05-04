@@ -176,7 +176,7 @@
                         <div class="col-xl-7 col-lg-9 col-md-8">
                             <div class="wantToWork-caption wantToWork-caption2">
                                 <h2>Status Antrian Hari Ini</h2>
-                                <p>Pantau kapasitas klinik, booking aktif, dan sisa slot. ({{ $today }})</p>
+                                <p>Pantau kapasitas klinik, pasien dalam antrian, dan sisa slot. ({{ $today }})</p>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4">
@@ -184,25 +184,19 @@
                         </div>
                     </div>
                     <div class="row mt-4 g-3">
-                        <div class="col-md-3 col-6 stat-card">
+                        <div class="col-md-4 col-6 stat-card">
                             <div class="single-services text-center p-3" style="background: rgba(255,255,255,0.7); border-radius: 10px;">
                                 <h3>{{ number_format($stats['total_bookings']) }}</h3>
-                                <p>Total Booking Hari Ini</p>
+                                <p>Booking Masuk</p>
                             </div>
                         </div>
-                        <div class="col-md-3 col-6 stat-card">
-                            <div class="single-services text-center p-3" style="background: rgba(255,255,255,0.7); border-radius: 10px;">
-                                <h3>{{ number_format($stats['booking_today']) }}</h3>
-                                <p>Booking Aktif Hari Ini</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6 mt-3 mt-md-0 stat-card">
+                        <div class="col-md-4 col-6 stat-card">
                             <div class="single-services text-center p-3" style="background: rgba(255,255,255,0.7); border-radius: 10px;">
                                 <h3>{{ number_format($stats['waiting_count']) }}</h3>
-                                <p>Sedang Menunggu</p>
+                                <p>Pasien Dalam Antrian</p>
                             </div>
                         </div>
-                        <div class="col-md-3 col-6 mt-3 mt-md-0 stat-card">
+                        <div class="col-md-4 col-6 mt-3 mt-md-0 stat-card">
                             <div class="single-services text-center p-3" style="background: rgba(255,255,255,0.7); border-radius: 10px;">
                                 <h3>{{ number_format($stats['slots_available']) }}</h3>
                                 <p>{{ $slotsLabel }}</p>
@@ -228,7 +222,7 @@
                             </div>
                             <div class="cat-cap">
                                 <h5><a href="/booking/create">Booking Online</a></h5>
-                                <p>Dapatkan nomor antrian dari rumah, pilih kategori pasien (BPJS/Umum) dan tanggal yang tersedia.</p>
+                                <p>Dapatkan nomor antrian dari rumah, pilih kategori pasien (BPJS/Umum) dan tanggal yang tersedia. <em>Antrian BPJS dan Umum digabung dalam satu daftar berdasarkan urutan booking.</em></p>
                                 <a href="/booking/create" class="plus-btn"><i class="ti-plus"></i></a>
                             </div>
                         </div>

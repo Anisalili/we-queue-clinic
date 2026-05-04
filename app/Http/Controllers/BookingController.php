@@ -207,12 +207,12 @@ class BookingController extends Controller
             return back()->with("error", "Booking ini sudah dibatalkan!");
         }
 
-        // Patient-specific cancellation rules
+        // Patient can cancel only if not yet checked in
         if (auth()->user()->hasRole("patient")) {
             if (!$booking->can_cancel) {
                 return back()->with(
                     "error",
-                    "Booking tidak dapat dibatalkan (minimal 2 jam sebelum jadwal)!",
+                    "Booking tidak dapat dibatalkan karena pasien sudah check-in!",
                 );
             }
         }
