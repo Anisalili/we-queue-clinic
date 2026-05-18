@@ -26,7 +26,7 @@
                                 <tr>
                                     <td>
                                         <span class="badge
-                                            @if($role->name === 'owner') bg-danger
+                                            @if($role->name === 'dokter') bg-danger
                                             @elseif($role->name === 'admin') bg-primary
                                             @else bg-success
                                             @endif fs-6">

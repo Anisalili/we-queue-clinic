@@ -32,8 +32,8 @@
                         <span class="badge bg-primary">Pasien</span>
                     @elseif($user->hasRole('admin'))
                         <span class="badge bg-success">Admin</span>
-                    @elseif($user->hasRole('owner'))
-                        <span class="badge bg-danger">Owner</span>
+                    @elseif($user->hasRole('dokter'))
+                        <span class="badge bg-danger">Dokter</span>
                     @endif
 
                     @if($user->avatar)

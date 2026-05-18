@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Booking;
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class PatientController extends Controller
 {
+    public function __construct(private FonnteService $wa) {}
+
     /**
      * Show walk-in registration form
      */
@@ -97,6 +100,8 @@ class PatientController extends Controller
             "check_in_time" => now(), // Auto check-in
             "notes" => $validated["notes"] ?? null,
         ]);
+
+        $this->wa->checkedIn($booking->load("user"));
 
         return redirect()
             ->route("booking.show", $booking)

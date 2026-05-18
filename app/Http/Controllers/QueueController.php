@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class QueueController extends Controller
 {
+    public function __construct(private FonnteService $wa) {}
+
     /**
      * Display the queue dashboard (Admin/Owner)
      */
@@ -158,6 +161,8 @@ class QueueController extends Controller
             "service_start_time" => now(),
         ]);
 
+        $this->wa->queueCalled($nextPatient->load("user"));
+
         return back()->with(
             "success",
             "Pasien dipanggil! Nomor Antrian: " .
@@ -196,6 +201,8 @@ class QueueController extends Controller
             "status" => "berlangsung",
             "service_start_time" => now(),
         ]);
+
+        $this->wa->queueCalled($booking->load("user"));
 
         return back()->with(
             "success",

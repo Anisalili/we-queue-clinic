@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class BookingController extends Controller
 {
+    public function __construct(private FonnteService $wa) {}
+
     /**
      * Display a listing of all bookings (Admin/Owner)
      */
@@ -134,6 +137,8 @@ class BookingController extends Controller
             "booking_type" => "online",
         ]);
 
+        $this->wa->bookingConfirmation($booking->load("user"));
+
         return redirect()
             ->route("booking.show", $booking)
             ->with(
@@ -148,11 +153,10 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        // Authorization check
-        if (
-            auth()->user()->hasRole("patient") &&
-            $booking->user_id !== auth()->id()
-        ) {
+        $user = auth()->user();
+        $isOwner = $booking->user_id === $user->id;
+
+        if (!$user->can("booking.view.all") && !($isOwner && $user->can("booking.view.own"))) {
             abort(403, "Unauthorized");
         }
 
@@ -187,11 +191,12 @@ class BookingController extends Controller
      */
     public function cancel(Request $request, Booking $booking)
     {
-        // Authorization check
-        if (
-            auth()->user()->hasRole("patient") &&
-            $booking->user_id !== auth()->id()
-        ) {
+        $user = auth()->user();
+        $isOwner = $booking->user_id === $user->id;
+        $canCancelAny = $user->can("booking.cancel.any");
+        $canCancelOwn = $isOwner && $user->can("booking.cancel.own");
+
+        if (!$canCancelAny && !$canCancelOwn) {
             abort(403, "Unauthorized");
         }
 
@@ -207,36 +212,36 @@ class BookingController extends Controller
             return back()->with("error", "Booking ini sudah dibatalkan!");
         }
 
-        // Patient can cancel only if not yet checked in
-        if (auth()->user()->hasRole("patient")) {
-            if (!$booking->can_cancel) {
-                return back()->with(
-                    "error",
-                    "Booking tidak dapat dibatalkan karena pasien sudah check-in!",
-                );
-            }
+        // Self-cancel (no staff override) requires booking not yet checked in
+        if (!$canCancelAny && !$booking->can_cancel) {
+            return back()->with(
+                "error",
+                "Booking tidak dapat dibatalkan karena pasien sudah check-in!",
+            );
         }
 
         $validated = $request->validate([
             "cancellation_reason" => "nullable|string|max:500",
         ]);
 
+        $byLabel = $canCancelAny ? "admin" : "pasien";
         $booking->update([
             "status" => "batal",
             "cancelled_at" => now(),
             "cancellation_reason" =>
                 $validated["cancellation_reason"] ??
-                "Dibatalkan oleh " .
-                    (auth()->user()->hasRole("patient") ? "pasien" : "admin"),
+                "Dibatalkan oleh " . $byLabel,
         ]);
+
+        $this->wa->bookingCancelled($booking->load("user"), $byLabel);
 
         $message = "Booking berhasil dibatalkan!";
 
-        if (auth()->user()->hasRole("patient")) {
-            return redirect()->route("booking.mine")->with("success", $message);
+        if ($user->can("booking.view.all")) {
+            return redirect()->route("booking.index")->with("success", $message);
         }
 
-        return redirect()->route("booking.index")->with("success", $message);
+        return redirect()->route("booking.mine")->with("success", $message);
     }
 
     /**
@@ -255,6 +260,8 @@ class BookingController extends Controller
             "status" => "menunggu",
             "check_in_time" => now(),
         ]);
+
+        $this->wa->checkedIn($booking->load("user"));
 
         return back()->with(
             "success",
@@ -280,6 +287,8 @@ class BookingController extends Controller
             "service_start_time" => now(),
         ]);
 
+        $this->wa->queueCalled($booking->load("user"));
+
         return back()->with(
             "success",
             "Pelayanan dimulai untuk pasien: " . $booking->user->name,
@@ -302,6 +311,8 @@ class BookingController extends Controller
             "status" => "selesai",
             "service_end_time" => now(),
         ]);
+
+        $this->wa->serviceFinished($booking->load("user"));
 
         return back()->with(
             "success",

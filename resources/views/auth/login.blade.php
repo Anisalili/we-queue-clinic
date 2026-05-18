@@ -85,7 +85,7 @@
                     <!-- Test Accounts Info -->
                     <div class="alert alert-info mt-3 py-2">
                         <p class="mb-1 fw-bold small">Test Accounts:</p>
-                        <small class="d-block">Owner: owner@clinic.test / password</small>
+                        <small class="d-block">Dokter: dokter@clinic.test / password</small>
                         <small class="d-block">Admin: admin@clinic.test / password</small>
                         <small class="d-block">Patient: patient@clinic.test / password</small>
                     </div>

@@ -2,55 +2,29 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Booking;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class BookingSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Get patient user
+        $tz = config("app.timezone", "UTC");
         $patient = User::where("email", "patient@clinic.test")->first();
+        $budi = User::where("email", "budi.queue@clinic.test")->first();
+        $sinta = User::where("email", "sinta.queue@clinic.test")->first();
+        $andi = User::where("email", "andi.queue@clinic.test")->first();
 
         if (!$patient) {
-            $this->command->warn(
-                "Patient user not found. Skipping booking seeder.",
-            );
+            $this->command->warn("Primary patient missing. Run UserSeeder first.");
             return;
         }
 
-        // Create bookings for today
-        $today = now();
+        $today = Carbon::today($tz);
 
-        // Booking 1: Online booking - status menunggu (already checked in)
-        Booking::create([
-            "user_id" => $patient->id,
-            "booking_date" => $today,
-            "queue_number" => 1,
-            "patient_category" => "bpjs",
-            "status" => "menunggu",
-            "booking_type" => "online",
-            "check_in_time" => $today->copy()->setTime(7, 30),
-            "created_at" => $today->copy()->subDay()->setTime(14, 0),
-        ]);
-
-        // Booking 2: Online booking - status booking (not yet checked in)
-        Booking::create([
-            "user_id" => $patient->id,
-            "booking_date" => $today->copy()->addDay(),
-            "queue_number" => 1,
-            "patient_category" => "umum",
-            "status" => "booking",
-            "booking_type" => "online",
-            "created_at" => $today->copy()->setTime(10, 0),
-        ]);
-
-        // Booking 3: Past booking - selesai
+        // ---- Past & future bookings for primary patient ----
         Booking::create([
             "user_id" => $patient->id,
             "booking_date" => $today->copy()->subDays(3),
@@ -64,7 +38,6 @@ class BookingSeeder extends Seeder
             "created_at" => $today->copy()->subDays(4),
         ]);
 
-        // Booking 4: Past booking - batal
         Booking::create([
             "user_id" => $patient->id,
             "booking_date" => $today->copy()->subDays(7),
@@ -77,17 +50,59 @@ class BookingSeeder extends Seeder
             "created_at" => $today->copy()->subDays(8),
         ]);
 
-        // Booking 5: Future booking
+        // ---- Tomorrow: queue preview (primary patient has active booking) ----
+        $tomorrow = $today->copy()->addDay();
+        $start = $tomorrow->copy()->setTime(8, 0);
+
+        if ($budi) {
+            Booking::create([
+                "user_id" => $budi->id,
+                "booking_date" => $tomorrow,
+                "queue_number" => 1,
+                "patient_category" => "bpjs",
+                "status" => "berlangsung",
+                "booking_type" => "online",
+                "check_in_time" => $start->copy()->subMinutes(15),
+                "service_start_time" => $start,
+                "created_at" => $start->copy()->subDay(),
+            ]);
+        }
+
+        if ($sinta) {
+            Booking::create([
+                "user_id" => $sinta->id,
+                "booking_date" => $tomorrow,
+                "queue_number" => 2,
+                "patient_category" => "umum",
+                "status" => "menunggu",
+                "booking_type" => "online",
+                "check_in_time" => $start->copy()->addMinutes(10),
+                "created_at" => $start->copy()->subDay()->addHour(),
+            ]);
+        }
+
         Booking::create([
             "user_id" => $patient->id,
-            "booking_date" => $today->copy()->addDays(3),
-            "queue_number" => 1,
+            "booking_date" => $tomorrow,
+            "queue_number" => 3,
             "patient_category" => "bpjs",
-            "status" => "booking",
+            "status" => "menunggu",
             "booking_type" => "online",
-            "created_at" => $today->copy()->setTime(11, 0),
+            "check_in_time" => $start->copy()->addMinutes(20),
+            "created_at" => $start->copy()->subDay()->addHours(2),
         ]);
 
-        $this->command->info("✅ Created 5 test bookings for patient");
+        if ($andi) {
+            Booking::create([
+                "user_id" => $andi->id,
+                "booking_date" => $tomorrow,
+                "queue_number" => 4,
+                "patient_category" => "umum",
+                "status" => "menunggu",
+                "booking_type" => "online",
+                "check_in_time" => $start->copy()->addMinutes(30),
+                "created_at" => $start->copy()->subDay()->addHours(3),
+            ]);
+        }
     }
 }

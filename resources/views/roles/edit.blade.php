@@ -10,7 +10,7 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4>Assign Permissions untuk Role: <span class="badge
-                        @if($role->name === 'owner') bg-danger
+                        @if($role->name === 'dokter') bg-danger
                         @elseif($role->name === 'admin') bg-primary
                         @else bg-success
                         @endif">{{ ucfirst($role->name) }}</span>

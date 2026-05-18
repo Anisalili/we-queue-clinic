@@ -130,9 +130,9 @@
                     </div>
                 </div>
 
-                <div class="card bg-warning bg-opacity-10 mt-3">
+                <div class="card mt-3">
                     <div class="card-body">
-                        <h6><i class="bi bi-exclamation-triangle text-warning"></i> Perhatian</h6>
+                        <h6 class="text-muted"><i class="bi bi-exclamation-triangle text-warning"></i> Perhatian</h6>
                         <p class="small mb-0">Pastikan tidak ada booking aktif sebelum menambah hari libur. Jika ada, hubungi pasien untuk reschedule.</p>
                     </div>
                 </div>

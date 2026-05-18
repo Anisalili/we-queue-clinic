@@ -100,14 +100,14 @@
     <!-- Category Stats -->
     <div class="row mb-4">
         <div class="col-6">
-            <div class="card bg-success bg-opacity-10">
+            <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-success mb-0">Pasien BPJS</h6>
+                            <h6 class="text-muted font-semibold mb-0">Pasien BPJS</h6>
                             <h3 class="font-extrabold mb-0">{{ $stats['bpjs'] }}</h3>
                         </div>
-                        <div class="text-success" style="font-size: 3rem;">
+                        <div class="stats-icon green">
                             <i class="bi bi-shield-check"></i>
                         </div>
                     </div>
@@ -115,14 +115,14 @@
             </div>
         </div>
         <div class="col-6">
-            <div class="card bg-primary bg-opacity-10">
+            <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-primary mb-0">Pasien Umum</h6>
+                            <h6 class="text-muted font-semibold mb-0">Pasien Umum</h6>
                             <h3 class="font-extrabold mb-0">{{ $stats['umum'] }}</h3>
                         </div>
-                        <div class="text-primary" style="font-size: 3rem;">
+                        <div class="stats-icon blue">
                             <i class="bi bi-wallet2"></i>
                         </div>
                     </div>

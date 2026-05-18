@@ -50,7 +50,7 @@
                             <td>
                                 @foreach($user->roles as $role)
                                     <span class="badge
-                                        @if($role->name === 'owner') bg-danger
+                                        @if($role->name === 'dokter') bg-danger
                                         @elseif($role->name === 'admin') bg-primary
                                         @else bg-success
                                         @endif">

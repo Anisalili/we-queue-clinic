@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ScheduleSeeder::class,
             BookingSeeder::class,
-            PatientQueuePreviewSeeder::class,
         ]);
     }
 }

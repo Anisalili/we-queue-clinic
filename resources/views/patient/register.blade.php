@@ -60,8 +60,8 @@
 
                 <!-- Registration Form -->
                 <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h4 class="card-title mb-0 text-white">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0 text-primary">
                             <i class="bi bi-person-plus"></i> Form Registrasi Walk-in
                         </h4>
                     </div>

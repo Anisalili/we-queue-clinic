@@ -17,33 +17,20 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                {{-- Dashboard --}}
-                @can('view.dashboard.v1')
-                <li class="sidebar-item {{ request()->routeIs('dashboard.v1') ? 'active' : '' }}">
-                    <a href="{{ route('dashboard.v1') }}" class='sidebar-link'>
+                {{-- Dashboard (single entry, resolved by highest permission) --}}
+                @php
+                    $dashboardRoute = auth()->user()?->can('view.dashboard.v3') ? 'dashboard.v3'
+                        : (auth()->user()?->can('view.dashboard.v2') ? 'dashboard.v2'
+                        : (auth()->user()?->can('view.dashboard.v1') ? 'dashboard.v1' : null));
+                @endphp
+                @if ($dashboardRoute)
+                <li class="sidebar-item {{ request()->routeIs($dashboardRoute) ? 'active' : '' }}">
+                    <a href="{{ route($dashboardRoute) }}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                @endcan
-
-                @can('view.dashboard.v2')
-                <li class="sidebar-item {{ request()->routeIs('dashboard.v2') ? 'active' : '' }}">
-                    <a href="{{ route('dashboard.v2') }}" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view.dashboard.v3')
-                <li class="sidebar-item {{ request()->routeIs('dashboard.v3') ? 'active' : '' }}">
-                    <a href="{{ route('dashboard.v3') }}" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                @endcan
+                @endif
 
                 {{-- Booking Section --}}
                 @canany(['booking.create', 'booking.view.own', 'booking.view.all'])

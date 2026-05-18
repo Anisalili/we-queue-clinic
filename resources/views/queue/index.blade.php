@@ -21,56 +21,35 @@
         </div>
     </div>
 
-    <!-- Quick Stats -->
+    <!-- Quick Stats (neutral cards, icon-led — Mazer stats-icon pattern) -->
     <div class="row mb-4">
+        @php
+            $statCards = [
+                ['label' => 'Total Hari Ini', 'value' => $stats['total_today'], 'icon' => 'iconly-boldProfile', 'tone' => 'purple', 'id' => 'stat-total'],
+                ['label' => 'Menunggu',       'value' => $stats['waiting'],     'icon' => 'iconly-boldTime-Circle', 'tone' => 'blue',   'id' => 'stat-waiting'],
+                ['label' => 'Berlangsung',    'value' => $stats['serving'],     'icon' => 'iconly-boldActivity',    'tone' => 'red',    'id' => 'stat-serving'],
+                ['label' => 'Selesai',        'value' => $stats['completed'],   'icon' => 'iconly-boldTick-Square', 'tone' => 'green',  'id' => 'stat-completed'],
+                ['label' => 'BPJS',           'value' => $stats['bpjs_today'],  'icon' => 'iconly-boldShield-Done', 'tone' => 'green',  'id' => null],
+                ['label' => 'Umum',           'value' => $stats['umum_today'],  'icon' => 'iconly-boldPaper',       'tone' => 'blue',   'id' => null],
+            ];
+        @endphp
+        @foreach ($statCards as $card)
         <div class="col-6 col-lg-2 col-md-4">
             <div class="card">
                 <div class="card-body px-3 py-4">
-                    <h6 class="text-muted font-semibold mb-0">Total Hari Ini</h6>
-                    <h3 class="font-extrabold mb-0" id="stat-total">{{ $stats['total_today'] }}</h3>
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon {{ $card['tone'] }} me-3">
+                            <i class="{{ $card['icon'] }}"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted font-semibold mb-0">{{ $card['label'] }}</h6>
+                            <h4 class="font-extrabold mb-0"{{ $card['id'] ? ' id=' . $card['id'] : '' }}>{{ $card['value'] }}</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-warning">
-                <div class="card-body px-3 py-4">
-                    <h6 class="text-white font-semibold mb-0">Menunggu</h6>
-                    <h3 class="font-extrabold mb-0 text-white" id="stat-waiting">{{ $stats['waiting'] }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-primary">
-                <div class="card-body px-3 py-4">
-                    <h6 class="text-white font-semibold mb-0">Berlangsung</h6>
-                    <h3 class="font-extrabold mb-0 text-white" id="stat-serving">{{ $stats['serving'] }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-success">
-                <div class="card-body px-3 py-4">
-                    <h6 class="text-white font-semibold mb-0">Selesai</h6>
-                    <h3 class="font-extrabold mb-0 text-white" id="stat-completed">{{ $stats['completed'] }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-success">
-                <div class="card-body px-3 py-4">
-                    <h6 class="text-white font-semibold mb-0">BPJS</h6>
-                    <h3 class="font-extrabold mb-0 text-white">{{ $stats['bpjs_today'] }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-2 col-md-4">
-            <div class="card bg-info">
-                <div class="card-body px-3 py-4">
-                    <h6 class="text-white font-semibold mb-0">Umum</h6>
-                    <h3 class="font-extrabold mb-0 text-white">{{ $stats['umum_today'] }}</h3>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
     <!-- Currently Serving -->
@@ -163,8 +142,8 @@
     <!-- Waiting Queue -->
     <section class="section">
         <div class="card">
-            <div class="card-header bg-warning">
-                <h4 class="card-title mb-0 text-white">
+            <div class="card-header">
+                <h4 class="card-title mb-0 text-primary">
                     <i class="bi bi-hourglass-split"></i> Antrian Menunggu ({{ $waitingQueue->count() }})
                 </h4>
             </div>
@@ -185,7 +164,7 @@
                             @foreach($waitingQueue as $queue)
                             <tr>
                                 <td>
-                                    <span class="badge bg-warning fs-4 px-3 py-2">{{ $queue->formatted_queue_number }}</span>
+                                    <span class="badge bg-light-primary text-primary fs-4 px-3 py-2">{{ $queue->formatted_queue_number }}</span>
                                 </td>
                                 <td>
                                     <strong>{{ $queue->user->name }}</strong>
@@ -204,11 +183,11 @@
                                             <i class="bi bi-megaphone"></i> Panggil
                                         </button>
                                         <button type="button"
-                                                class="btn btn-sm btn-warning"
+                                                class="btn btn-sm btn-outline-secondary"
                                                 onclick="skipPatient{{ $queue->id }}()">
                                             <i class="bi bi-skip-forward"></i> Lewati
                                         </button>
-                                        <a href="{{ route('booking.show', $queue) }}" class="btn btn-sm btn-outline-info">
+                                        <a href="{{ route('booking.show', $queue) }}" class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </div>
@@ -274,7 +253,7 @@
                     </table>
                 </div>
                 @else
-                <div class="alert alert-info">
+                <div class="alert alert-light-primary color-primary">
                     <i class="bi bi-info-circle"></i> Tidak ada antrian menunggu
                 </div>
                 @endif
@@ -287,9 +266,9 @@
         <!-- Not Checked In -->
         <div class="col-12 col-lg-4">
             <div class="card">
-                <div class="card-header bg-secondary">
-                    <h6 class="card-title mb-0 text-white">
-                        <i class="bi bi-clock"></i> Belum Check-in ({{ $notCheckedIn->count() }})
+                <div class="card-header">
+                    <h6 class="card-title mb-0 text-muted">
+                        <i class="bi bi-clock text-secondary"></i> Belum Check-in ({{ $notCheckedIn->count() }})
                     </h6>
                 </div>
                 <div class="card-body" style="max-height: 300px; overflow-y: auto;">
@@ -302,7 +281,7 @@
                                     <strong>{{ $booking->formatted_queue_number }}</strong> - {{ $booking->user->name }}
                                     <br><small class="text-muted">{!! $booking->category_badge !!}</small>
                                 </div>
-                                <a href="{{ route('booking.show', $booking) }}" class="btn btn-sm btn-outline-info">
+                                <a href="{{ route('booking.show', $booking) }}" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-eye"></i>
                                 </a>
                             </div>
@@ -319,9 +298,9 @@
         <!-- Completed Today -->
         <div class="col-12 col-lg-4">
             <div class="card">
-                <div class="card-header bg-success">
-                    <h6 class="card-title mb-0 text-white">
-                        <i class="bi bi-check-circle"></i> Selesai ({{ $completed->count() }})
+                <div class="card-header">
+                    <h6 class="card-title mb-0 text-muted">
+                        <i class="bi bi-check-circle text-success"></i> Selesai ({{ $completed->count() }})
                     </h6>
                 </div>
                 <div class="card-body" style="max-height: 300px; overflow-y: auto;">
@@ -344,9 +323,9 @@
         <!-- Cancelled Today -->
         <div class="col-12 col-lg-4">
             <div class="card">
-                <div class="card-header bg-danger">
-                    <h6 class="card-title mb-0 text-white">
-                        <i class="bi bi-x-circle"></i> Dibatalkan ({{ $cancelled->count() }})
+                <div class="card-header">
+                    <h6 class="card-title mb-0 text-muted">
+                        <i class="bi bi-x-circle text-danger"></i> Dibatalkan ({{ $cancelled->count() }})
                     </h6>
                 </div>
                 <div class="card-body" style="max-height: 300px; overflow-y: auto;">

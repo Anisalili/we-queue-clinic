@@ -2,111 +2,94 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class PermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Reset cached roles and permissions
-        app()[
-            \Spatie\Permission\PermissionRegistrar::class
-        ]->forgetCachedPermissions();
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Define all permissions (granular, feature-based)
+        // Lean permission set — only permissions actually gated in routes/views.
         $permissions = [
-            // Dashboard permissions
-            "view.dashboard.v1", // Patient dashboard
-            "view.dashboard.v2", // Admin dashboard
-            "view.dashboard.v3", // Owner dashboard
+            // Dashboards
+            "view.dashboard.v1",     // patient
+            "view.dashboard.v2",     // admin
+            "view.dashboard.v3",     // owner
 
-            // Booking permissions
-            "booking.create",
-            "booking.view.own",
-            "booking.view.all",
-            "booking.cancel.own",
-            "booking.cancel.any",
-            "booking.update",
+            // Booking
+            "booking.create",        // patient creates own booking
+            "booking.view.own",      // patient sees own bookings
+            "booking.view.all",      // staff sees all bookings
+            "booking.cancel.own",    // patient cancels own
+            "booking.cancel.any",    // staff cancels any
+            "booking.update",        // staff check-in / edits
 
-            // Queue management permissions
+            // Queue
             "queue.view",
             "queue.manage",
-            "queue.call",
 
-            // Patient management permissions
+            // Patient (walk-in registration)
             "patient.register",
-            "patient.view.own",
-            "patient.view.all",
-            "patient.update.own",
-            "patient.update.any",
 
-            // Schedule permissions
-            "schedule.view",
+            // Schedule (owner-only configuration)
             "schedule.configure",
-            "schedule.override",
 
-            // Report permissions
+            // Reports
             "report.view",
             "report.export",
-            "report.analytics",
 
-            // Notification permissions
-            "notification.send.manual",
-            "notification.view.log",
-
-            // User management permissions (for future admin panel)
+            // User management
             "user.view",
             "user.create",
             "user.update",
             "user.delete",
         ];
 
-        // Create permissions
         foreach ($permissions as $permission) {
             Permission::create(["name" => $permission]);
         }
 
-        // Create roles and assign permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Patient Role
-        $patientRole = Role::create(["name" => "patient"]);
-        $patientPermissions = Permission::whereIn("name", [
+        // ---- Patient: book + manage own only ----
+        $patient = Role::create(["name" => "patient"]);
+        $patient->syncPermissions([
             "view.dashboard.v1",
             "booking.create",
             "booking.view.own",
             "booking.cancel.own",
-            "patient.view.own",
-            "patient.update.own",
-        ])->get();
-        $patientRole->syncPermissions($patientPermissions);
+        ]);
 
-        // 2. Admin Role
-        $adminRole = Role::create(["name" => "admin"]);
-        $adminPermissions = Permission::whereIn("name", [
-            "view.dashboard.v2",
+        // Shared staff perms (both admin & owner/dokter).
+        $sharedStaffPerms = [
             "booking.view.all",
             "booking.cancel.any",
             "booking.update",
             "queue.view",
             "queue.manage",
-            "queue.call",
-            "patient.register",
-            "patient.view.all",
-            "patient.update.any",
-            "schedule.view",
-            "notification.send.manual",
-            "notification.view.log",
-        ])->get();
-        $adminRole->syncPermissions($adminPermissions);
+            "report.view",
+            "report.export",
+            "user.view",
+            "user.create",
+            "user.update",
+            "user.delete",
+        ];
 
-        // 3. Owner Role (has all permissions)
-        $ownerRole = Role::create(["name" => "owner"]);
-        $ownerRole->syncPermissions(Permission::all());
+        // ---- Admin: shared staff perms + schedule mgmt + walk-in registration ----
+        $admin = Role::create(["name" => "admin"]);
+        $admin->syncPermissions(array_merge($sharedStaffPerms, [
+            "view.dashboard.v2",
+            "schedule.configure",
+            "patient.register",
+        ]));
+
+        // ---- Dokter: same as admin EXCEPT schedule mgmt & walk-in ----
+        $dokter = Role::create(["name" => "dokter"]);
+        $dokter->syncPermissions(array_merge($sharedStaffPerms, [
+            "view.dashboard.v3",
+        ]));
     }
 }

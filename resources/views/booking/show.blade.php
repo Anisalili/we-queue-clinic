@@ -154,9 +154,9 @@
             </div>
 
             <div class="col-12 col-lg-4">
-                <div class="card bg-info bg-opacity-10">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-info-circle"></i> Apa Selanjutnya?</h5>
+                        <h5 class="card-title text-primary"><i class="bi bi-info-circle"></i> Apa Selanjutnya?</h5>
                         <hr>
 
                         @if($booking->status === 'booking')
