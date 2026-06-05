@@ -261,8 +261,6 @@ class BookingController extends Controller
             "check_in_time" => now(),
         ]);
 
-        $this->wa->checkedIn($booking->load("user"));
-
         return back()->with(
             "success",
             "Pasien berhasil check-in! Nomor antrian: " .

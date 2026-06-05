@@ -93,17 +93,6 @@ class FonnteService
         return $this->send($booking->user->phone, $message);
     }
 
-    public function checkedIn(Booking $booking): bool
-    {
-        $clinic = config("services.fonnte.clinic_name");
-        $message = "Halo {$booking->user->name},\n\n"
-            . "Anda telah check-in. Nomor antrian: *{$booking->formatted_queue_number}*.\n"
-            . "Mohon menunggu hingga nomor Anda dipanggil.\n\n"
-            . "_{$clinic}_";
-
-        return $this->send($booking->user->phone, $message);
-    }
-
     public function queueCalled(Booking $booking): bool
     {
         $clinic = config("services.fonnte.clinic_name");

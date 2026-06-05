@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Clinic Queue | Landing</title>
+    <title>Qlinic — Apotek Anna Farma</title>
     <meta
         name="description"
         content="Clinic Queue - Booking online, pantau antrian real-time, dan cek jadwal layanan klinik."
@@ -48,6 +48,21 @@
             background: #e7f5ea;
             padding: 90px 0;
         }
+        .home-blog-single .blog-img img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+        .service-area .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .service-area .row > [class*="col-"] {
+            display: flex;
+        }
+        .service-area .single-cat {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -68,11 +83,9 @@
                     <div class="row align-items-center">
                         <div class="col-xl-2 col-lg-2 col-md-1">
                             <div class="logo">
-                                <a
-                                    href="#home"
-                                    style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #1f5132; text-decoration: none; font-family: 'Poppins', sans-serif;"
-                                    >Clinic Queue</a
-                                >
+                                <a href="#home" style="text-decoration: none;">
+                                    <img src="{{ asset('landing/assets/img/logo.png') }}" alt="Qlinic - Apotek Anna Farma" style="max-height: 70px; width: auto;" />
+                                </a>
                             </div>
                         </div>
                         <div class="col-xl-10 col-lg-10 col-md-10">
@@ -125,8 +138,8 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-12 mt-4 mt-lg-0">
                         <img
-                            src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1100&q=80"
-                            alt="Staf klinik"
+                            src="{{ asset('landing/assets/img/Anna Farma.png') }}"
+                            alt="Apotek Anna Farma"
                             class="hero-image"
                         />
                     </div>
@@ -140,8 +153,8 @@
                     <div class="col-lg-7 col-md-12">
                         <div class="about-img">
                             <img
-                                src="https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=80"
-                                alt="Ruang tunggu klinik"
+                                src="{{ asset('landing/assets/img/meja depan.jpg.jpeg') }}"
+                                alt="Meja resepsionis klinik"
                                 style="border-radius: 24px;"
                             />
                         </div>
@@ -270,8 +283,8 @@
                             <div class="blog-img-cap">
                                 <div class="blog-img">
                                     <img
-                                        src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
-                                        alt="Pendaftaran pasien"
+                                        src="{{ asset('landing/assets/img/booking online.png') }}"
+                                        alt="Booking online"
                                     />
                                 </div>
                                 <div class="blog-cap">
@@ -286,8 +299,8 @@
                             <div class="blog-img-cap">
                                 <div class="blog-img">
                                     <img
-                                        src="https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=800&q=80"
-                                        alt="Monitoring antrian"
+                                        src="{{ asset('landing/assets/img/Lihat Antrian.png') }}"
+                                        alt="Pantau nomor antrian"
                                     />
                                 </div>
                                 <div class="blog-cap">
@@ -302,8 +315,8 @@
                             <div class="blog-img-cap">
                                 <div class="blog-img">
                                     <img
-                                        src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
-                                        alt="Check-in klinik"
+                                        src="{{ asset('landing/assets/img/on time.png') }}"
+                                        alt="Datang tepat waktu"
                                     />
                                 </div>
                                 <div class="blog-cap">
@@ -355,11 +368,9 @@
                         <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
                             <div class="single-footer-caption mb-50">
                                 <div class="footer-logo mb-25">
-                                    <a
-                                        href="#home"
-                                        style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: #ffffff; text-decoration: none; font-family: 'Poppins', sans-serif;"
-                                        >Clinic Queue</a
-                                    >
+                                    <a href="#home" style="text-decoration: none;">
+                                        <img src="{{ asset('landing/assets/img/logo.png') }}" alt="Qlinic - Apotek Anna Farma" style="max-height: 90px; width: auto;" />
+                                    </a>
                                 </div>
                                 <div class="header-area">
                                     <div class="main-header main-header2">
@@ -412,7 +423,7 @@
                         <div class="row">
                             <div class="col-xl-10">
                                 <div class="footer-copy-right">
-                                    <p>© <script>document.write(new Date().getFullYear());</script> Clinic Queue Management System</p>
+                                    <p>© <script>document.write(new Date().getFullYear());</script> Qlinic — Apotek Anna Farma</p>
                                 </div>
                             </div>
                         </div>

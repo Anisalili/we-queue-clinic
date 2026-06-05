@@ -101,8 +101,6 @@ class PatientController extends Controller
             "notes" => $validated["notes"] ?? null,
         ]);
 
-        $this->wa->checkedIn($booking->load("user"));
-
         return redirect()
             ->route("booking.show", $booking)
             ->with(

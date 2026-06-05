@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}">
-                        <h4 class="mb-0">Clinic Queue</h4>
+                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="max-height: 60px; width: auto;" />
                     </a>
                 </div>
                 <div class="toggler">
