@@ -3,8 +3,12 @@
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="max-height: 60px; width: auto;" />
+                    <a href="{{ route('dashboard') }}" class="d-flex align-items-center gap-2 text-decoration-none">
+                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="height: 72px; max-height: none; width: auto;" />
+                        <span class="d-flex flex-column lh-1">
+                            <span style="font-size: 1.25rem; font-weight: 700; color: #435ebe;">Qlinic</span>
+                            <span style="font-size: .7rem; font-weight: 500; color: #6c757d;">Apotek Anna Farma</span>
+                        </span>
                     </a>
                 </div>
                 <div class="toggler">

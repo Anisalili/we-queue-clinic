@@ -31,7 +31,7 @@ return [
     'fonnte' => [
         'token' => env('FONNTE_TOKEN'),
         'endpoint' => env('FONNTE_ENDPOINT', 'https://api.fonnte.com/send'),
-        'clinic_name' => env('FONNTE_CLINIC_NAME', 'Klinik'),
+        'clinic_name' => env('FONNTE_CLINIC_NAME', 'Qlinic - Apotek Anna Farma'),
     ],
 
     'slack' => [

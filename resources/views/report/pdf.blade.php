@@ -266,7 +266,7 @@
     </div>
 
     <div class="footer">
-        <p>Laporan ini dicetak secara otomatis oleh sistem Web Queue Clinic</p>
+        <p>Laporan ini dicetak secara otomatis oleh sistem Qlinic</p>
         <p>{{ config('app.name') }} &copy; {{ date('Y') }}</p>
     </div>
 </body>
