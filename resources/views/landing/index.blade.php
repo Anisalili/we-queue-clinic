@@ -480,9 +480,8 @@
                                     <h4>Kontak Klinik</h4>
                                 </div>
                                 <div class="footer-pera mb-20">
-                                    <p class="mb-1">Telepon: 0812-3456-7890</p>
-                                    <p class="mb-1">WhatsApp: 0812-3456-7890</p>
-                                    <p class="mb-0">Email: support@clinicqueue.test</p>
+                                    <p class="mb-1">Telepon: +62 822-5038-2128</p>
+                                    <p class="mb-0">WhatsApp: +62 822-5038-2128</p>
                                 </div>
                                 <div class="footer-tittle mb-20">
                                     <h4>Alamat Klinik</h4>

@@ -222,9 +222,9 @@
                         <h6><i class="bi bi-telephone"></i> Kontak Klinik</h6>
                         <hr>
                         <p class="small mb-1"><strong>Telepon:</strong></p>
-                        <p class="small">0812-3456-7890</p>
+                        <p class="small">+62 822-5038-2128</p>
                         <p class="small mb-1"><strong>WhatsApp:</strong></p>
-                        <p class="small mb-0">0812-3456-7890</p>
+                        <p class="small mb-0">+62 822-5038-2128</p>
                     </div>
                 </div>
             </div>
