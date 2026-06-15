@@ -48,6 +48,22 @@
             background: #e7f5ea;
             padding: 90px 0;
         }
+        .hero-inner {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+        @media (min-width: 992px) {
+            .hero-inner {
+                padding-left: 80px;
+                padding-right: 80px;
+            }
+        }
+        @media (min-width: 1400px) {
+            .hero-inner {
+                padding-left: 120px;
+                padding-right: 120px;
+            }
+        }
         .home-blog-single .blog-img img {
             width: 100%;
             height: 320px;
@@ -62,6 +78,37 @@
         }
         .service-area .single-cat {
             width: 100%;
+        }
+        .hero-slider,
+        .hero-slider .owl-stage-outer,
+        .hero-slider .owl-stage,
+        .hero-slider .owl-item {
+            background: #e7f5ea;
+        }
+        .hero-slider .owl-stage-outer,
+        .hero-slider .owl-item {
+            -webkit-transform: none;
+            transform: none;
+        }
+        .hero-slider .owl-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 35px;
+        }
+        .hero-slider .owl-dots .owl-dot span {
+            width: 12px;
+            height: 12px;
+            margin: 0 5px;
+            background: #8bc3a0;
+            display: inline-block;
+            border-radius: 50%;
+            transition: all .3s ease;
+        }
+        .hero-slider .owl-dots .owl-dot.active span {
+            background: #0f8a3c;
+            width: 30px;
+            border-radius: 6px;
         }
     </style>
 </head>
@@ -117,31 +164,62 @@
     </header>
     <main>
         <section class="hero-block" id="home">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-lg-6 col-md-12">
-                        <div class="hero-wrapper">
-                            <div class="hero__caption">
-                                <h1>
-                                    Pantau Antrian Klinik<br />Tanpa Ribet
-                                </h1>
-                                <p>
-                                    Booking online, pantau status antrian, dan datang saat giliran Anda dipanggil.
-                                </p>
-                                <div class="d-flex flex-wrap gap-3">
-                                    <a href="/login" class="btn">Masuk</a>
-                                    <a href="/register" class="btn btn-border">Daftar</a>
-                                    <a href="/booking/create" class="btn btn-border">Buat Booking</a>
+            <div class="container-fluid hero-inner">
+                <div class="hero-slider owl-carousel">
+                    <div class="hero-slide">
+                        <div class="row align-items-center">
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="hero-wrapper">
+                                    <div class="hero__caption">
+                                        <h1>
+                                            Pantau Antrian Klinik<br />Tanpa Ribet
+                                        </h1>
+                                        <p>
+                                            Booking online, pantau status antrian, dan datang saat giliran Anda dipanggil.
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-3">
+                                            <a href="/login" class="btn">Masuk</a>
+                                            <a href="/register" class="btn btn-border">Daftar</a>
+                                            <a href="/booking/create" class="btn btn-border">Buat Booking</a>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 mt-4 mt-lg-0">
+                                <img
+                                    src="{{ asset('landing/assets/img/Anna Farma.png') }}"
+                                    alt="Apotek Anna Farma"
+                                    class="hero-image"
+                                />
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-lg-6 col-md-12 mt-4 mt-lg-0">
-                        <img
-                            src="{{ asset('landing/assets/img/Anna Farma.png') }}"
-                            alt="Apotek Anna Farma"
-                            class="hero-image"
-                        />
+                    <div class="hero-slide">
+                        <div class="row align-items-center">
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="hero-wrapper">
+                                    <div class="hero__caption">
+                                        <h1>
+                                            Datang ke Apotek<br />Anna Farma
+                                        </h1>
+                                        <p>
+                                            Layanan apotek dan klinik umum siap melayani Anda. Booking online dulu, antri lebih nyaman tanpa lama menunggu.
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-3">
+                                            <a href="/booking/create" class="btn">Buat Booking</a>
+                                            <a href="#contact" class="btn btn-border">Lihat Lokasi</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 mt-4 mt-lg-0">
+                                <img
+                                    src="{{ asset('landing/assets/img/klinik2.png') }}"
+                                    alt="Gedung Apotek Anna Farma"
+                                    class="hero-image"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -424,6 +502,7 @@
                             <div class="col-xl-10">
                                 <div class="footer-copy-right">
                                     <p>© <script>document.write(new Date().getFullYear());</script> Qlinic — Apotek Anna Farma</p>
+                                    <p class="mb-0">Anisa Lili Safitri — 2301301041</p>
                                 </div>
                             </div>
                         </div>
@@ -461,5 +540,20 @@
     <script src="{{ asset('landing/assets/js/jquery.ajaxchimp.min.js') }}"></script>
     <script src="{{ asset('landing/assets/js/plugins.js') }}"></script>
     <script src="{{ asset('landing/assets/js/main.js') }}"></script>
+    <script>
+        jQuery(function ($) {
+            $('.hero-slider').owlCarousel({
+                items: 1,
+                loop: true,
+                margin: 0,
+                nav: false,
+                dots: true,
+                autoplay: true,
+                autoplayTimeout: 6000,
+                autoplayHoverPause: true,
+                smartSpeed: 700,
+            });
+        });
+    </script>
 </body>
 </html>

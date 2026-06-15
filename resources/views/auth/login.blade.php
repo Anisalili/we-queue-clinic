@@ -16,7 +16,7 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
-                    <h1 class="auth-title">Log in.</h1>
+                    <h1 class="auth-title">Masuk.</h1>
                     <p class="auth-subtitle mb-4">Masuk dengan email dan password Anda.</p>
 
                     <!-- Session Status -->
@@ -64,31 +64,14 @@
                             @enderror
                         </div>
 
-                        <!-- Remember Me -->
-                        <div class="form-check form-check-lg d-flex align-items-end">
-                            <input class="form-check-input me-2" type="checkbox" name="remember" id="remember_me">
-                            <label class="form-check-label text-gray-600" for="remember_me">
-                                Keep me logged in
-                            </label>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-4">Log in</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-4">Masuk</button>
                     </form>
 
-                    <div class="text-center mt-4">
-                        <p class="text-gray-600 mb-2">Don't have an account? <a href="{{ route('register') }}" class="font-bold">Sign up</a>.</p>
-                        @if (Route::has('password.request'))
-                            <p class="mb-0"><a class="font-bold" href="{{ route('password.request') }}">Forgot password?</a></p>
-                        @endif
-                    </div>
-
-                    <!-- Test Accounts Info -->
-                    <div class="alert alert-info mt-3 py-2">
-                        <p class="mb-1 fw-bold small">Test Accounts:</p>
-                        <small class="d-block">Dokter: dokter@clinic.test / password</small>
-                        <small class="d-block">Admin: admin@clinic.test / password</small>
-                        <small class="d-block">Patient: patient@clinic.test / password</small>
-                    </div>
+                    @if (Route::has('password.request'))
+                        <div class="text-center mt-4">
+                            <p class="mb-0"><a class="font-bold" href="{{ route('password.request') }}">Lupa password?</a></p>
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="col-lg-7 d-none d-lg-block">
