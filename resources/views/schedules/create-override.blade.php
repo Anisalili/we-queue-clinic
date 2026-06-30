@@ -84,7 +84,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="max_slots" class="form-label">Kuota Slot</label>
+                                    <label for="max_slots" class="form-label">Kuota</label>
                                     <input type="number" class="form-control @error('max_slots') is-invalid @enderror"
                                            id="max_slots" name="max_slots" value="{{ old('max_slots') }}"
                                            min="1" max="100">
@@ -128,7 +128,7 @@
                         <p class="mb-2"><strong>Contoh Penggunaan:</strong></p>
                         <ul class="small">
                             <li>Jadwal lebih singkat (tutup lebih awal)</li>
-                            <li>Menambah/mengurangi kuota slot</li>
+                            <li>Menambah/mengurangi kuota</li>
                             <li>Tutup total untuk cuti darurat</li>
                         </ul>
 

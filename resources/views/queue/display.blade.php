@@ -227,7 +227,7 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
 
-            const timeString = `${day}, ${date} ${month} ${year} - ${hours}:${minutes}:${seconds} WIB`;
+            const timeString = `${day}, ${date} ${month} ${year} - ${hours}:${minutes}:${seconds} WITA`;
             document.getElementById('current-time').textContent = timeString;
         }
 

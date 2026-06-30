@@ -177,214 +177,101 @@
     </section>
 
     <!-- Booking List -->
+    @php
+        $bpjsBookings = $bookings->where('patient_category', 'bpjs');
+        $umumBookings = $bookings->where('patient_category', 'umum');
+    @endphp
     <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Daftar Booking</h4>
+        @if($bookings->count() > 0)
+        <div class="row">
+            <!-- Daftar Booking BPJS -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="card-title mb-0"><span class="badge bg-success me-2">BPJS</span> Daftar Booking BPJS ({{ $bpjsBookings->count() }})</h4>
+                        <small class="text-muted">Nomor antrian BPJS bisa diubah agar sinkron dengan Mobile JKN</small>
+                    </div>
+                    <div class="card-body">
+                        @if($bpjsBookings->count() > 0)
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>No. Antrian</th>
+                                        <th>Pasien</th>
+                                        <th>Tanggal</th>
+                                        <th>Kategori</th>
+                                        <th>Status</th>
+                                        <th>Tipe</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($bpjsBookings as $booking)
+                                        @include('booking.partials.row', ['booking' => $booking])
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @else
+                        <div class="alert alert-light border mb-0">
+                            <i class="bi bi-info-circle"></i> Tidak ada booking BPJS untuk filter yang dipilih.
+                        </div>
+                        @endif
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @if($bookings->count() > 0)
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>No. Antrian</th>
-                                <th>Pasien</th>
-                                <th>Tanggal</th>
-                                <th>Kategori</th>
-                                <th>Status</th>
-                                <th>Tipe</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($bookings as $booking)
-                            <tr>
-                                <td>
-                                    <h4 class="mb-0 text-primary">{{ $booking->formatted_queue_number }}</h4>
-                                </td>
-                                <td>
-                                    <strong>{{ $booking->user->name }}</strong>
-                                    <br><small class="text-muted">{{ $booking->user->phone ?? '-' }}</small>
-                                </td>
-                                <td>
-                                    {{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}
-                                    <br><small class="text-muted">{{ \Carbon\Carbon::parse($booking->booking_date)->locale('id')->translatedFormat('l') }}</small>
-                                </td>
-                                <td>{!! $booking->category_badge !!}</td>
-                                <td>{!! $booking->status_badge !!}</td>
-                                <td>
-                                    <span class="badge {{ $booking->booking_type === 'online' ? 'bg-info' : 'bg-warning' }}">
-                                        {{ ucfirst($booking->booking_type) }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ route('booking.show', $booking) }}"
-                                           class="btn btn-sm btn-info"
-                                           title="Detail">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
 
-                                        @if($booking->status === 'booking')
-                                        <button type="button"
-                                                class="btn btn-sm btn-success"
-                                                onclick="checkIn{{ $booking->id }}()"
-                                                title="Check-in">
-                                            <i class="bi bi-check-circle"></i>
-                                        </button>
-                                        @endif
-
-                                        @if($booking->status === 'menunggu')
-                                        <button type="button"
-                                                class="btn btn-sm btn-primary"
-                                                onclick="startService{{ $booking->id }}()"
-                                                title="Mulai Pelayanan">
-                                            <i class="bi bi-play-circle"></i>
-                                        </button>
-                                        @endif
-
-                                        @if($booking->status === 'berlangsung')
-                                        <button type="button"
-                                                class="btn btn-sm btn-success"
-                                                onclick="finishService{{ $booking->id }}()"
-                                                title="Selesai">
-                                            <i class="bi bi-check2-circle"></i>
-                                        </button>
-                                        @endif
-
-                                        @if(in_array($booking->status, ['booking', 'menunggu']))
-                                        <button type="button"
-                                                class="btn btn-sm btn-danger"
-                                                onclick="cancelBooking{{ $booking->id }}()"
-                                                title="Batalkan">
-                                            <i class="bi bi-x-circle"></i>
-                                        </button>
-                                        @endif
-                                    </div>
-
-                                    <!-- Hidden Forms -->
-                                    @if($booking->status === 'booking')
-                                    <form id="checkin-form-{{ $booking->id }}"
-                                          action="{{ route('booking.check-in', $booking) }}"
-                                          method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                    <script>
-                                        function checkIn{{ $booking->id }}() {
-                                            Swal.fire({
-                                                title: 'Check-in Pasien?',
-                                                html: '<strong>{{ $booking->user->name }}</strong><br>Nomor Antrian: {{ $booking->formatted_queue_number }}',
-                                                icon: 'question',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#198754',
-                                                cancelButtonColor: '#6c757d',
-                                                confirmButtonText: 'Ya, Check-in!',
-                                                cancelButtonText: 'Batal'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    document.getElementById('checkin-form-{{ $booking->id }}').submit();
-                                                }
-                                            });
-                                        }
-                                    </script>
-                                    @endif
-
-                                    @if($booking->status === 'menunggu')
-                                    <form id="start-form-{{ $booking->id }}"
-                                          action="{{ route('booking.start-service', $booking) }}"
-                                          method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                    <script>
-                                        function startService{{ $booking->id }}() {
-                                            Swal.fire({
-                                                title: 'Mulai Pelayanan?',
-                                                html: '<strong>{{ $booking->user->name }}</strong><br>Nomor Antrian: {{ $booking->formatted_queue_number }}',
-                                                icon: 'question',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#0d6efd',
-                                                cancelButtonColor: '#6c757d',
-                                                confirmButtonText: 'Ya, Mulai!',
-                                                cancelButtonText: 'Batal'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    document.getElementById('start-form-{{ $booking->id }}').submit();
-                                                }
-                                            });
-                                        }
-                                    </script>
-                                    @endif
-
-                                    @if($booking->status === 'berlangsung')
-                                    <form id="finish-form-{{ $booking->id }}"
-                                          action="{{ route('booking.finish-service', $booking) }}"
-                                          method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                    <script>
-                                        function finishService{{ $booking->id }}() {
-                                            Swal.fire({
-                                                title: 'Selesai Pelayanan?',
-                                                html: '<strong>{{ $booking->user->name }}</strong><br>Nomor Antrian: {{ $booking->formatted_queue_number }}',
-                                                icon: 'question',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#198754',
-                                                cancelButtonColor: '#6c757d',
-                                                confirmButtonText: 'Ya, Selesai!',
-                                                cancelButtonText: 'Batal'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    document.getElementById('finish-form-{{ $booking->id }}').submit();
-                                                }
-                                            });
-                                        }
-                                    </script>
-                                    @endif
-
-                                    @if(in_array($booking->status, ['booking', 'menunggu']))
-                                    <form id="cancel-form-{{ $booking->id }}"
-                                          action="{{ route('booking.cancel', $booking) }}"
-                                          method="POST" class="d-none">
-                                        @csrf
-                                        <input type="hidden" name="cancellation_reason" value="Dibatalkan oleh admin">
-                                    </form>
-                                    <script>
-                                        function cancelBooking{{ $booking->id }}() {
-                                            Swal.fire({
-                                                title: 'Batalkan Booking?',
-                                                html: '<strong>{{ $booking->user->name }}</strong><br>Nomor Antrian: {{ $booking->formatted_queue_number }}',
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#dc3545',
-                                                cancelButtonColor: '#6c757d',
-                                                confirmButtonText: 'Ya, Batalkan!',
-                                                cancelButtonText: 'Tidak'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    document.getElementById('cancel-form-{{ $booking->id }}').submit();
-                                                }
-                                            });
-                                        }
-                                    </script>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <!-- Daftar Booking Umum -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0"><span class="badge bg-primary me-2">UMUM</span> Daftar Booking Umum ({{ $umumBookings->count() }})</h4>
+                    </div>
+                    <div class="card-body">
+                        @if($umumBookings->count() > 0)
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>No. Antrian</th>
+                                        <th>Pasien</th>
+                                        <th>Tanggal</th>
+                                        <th>Kategori</th>
+                                        <th>Status</th>
+                                        <th>Tipe</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($umumBookings as $booking)
+                                        @include('booking.partials.row', ['booking' => $booking])
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @else
+                        <div class="alert alert-light border mb-0">
+                            <i class="bi bi-info-circle"></i> Tidak ada booking Umum untuk filter yang dipilih.
+                        </div>
+                        @endif
+                    </div>
                 </div>
-
-                <div class="mt-3">
-                    {{ $bookings->links() }}
-                </div>
-                @else
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Tidak ada booking ditemukan untuk filter yang dipilih.
-                </div>
-                @endif
             </div>
         </div>
+
+        <div class="mt-3">
+            {{ $bookings->links() }}
+        </div>
+        @else
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Tidak ada booking ditemukan untuk filter yang dipilih.
+                </div>
+            </div>
+        </div>
+        @endif
     </section>
 </div>
 @endsection

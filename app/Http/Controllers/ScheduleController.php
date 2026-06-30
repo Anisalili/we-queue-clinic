@@ -121,17 +121,42 @@ class ScheduleController extends Controller
     public function storeHoliday(Request $request)
     {
         $validated = $request->validate([
-            "date" => "required|date",
+            "start_date" => "required|date|after_or_equal:today",
+            "end_date" => "nullable|date|after_or_equal:start_date",
             "name" => "required|string|max:255",
             "type" => "required|in:national,clinic_leave,emergency",
             "description" => "nullable|string|max:500",
         ]);
 
-        Holiday::create($validated);
+        $start = \Carbon\Carbon::parse($validated["start_date"]);
+        $end = $validated["end_date"]
+            ? \Carbon\Carbon::parse($validated["end_date"])
+            : $start->copy();
+
+        $created = 0;
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $holiday = Holiday::firstOrCreate(
+                ["date" => $date->toDateString()],
+                [
+                    "name" => $validated["name"],
+                    "type" => $validated["type"],
+                    "description" => $validated["description"] ?? null,
+                ],
+            );
+
+            if ($holiday->wasRecentlyCreated) {
+                $created++;
+            }
+        }
 
         return redirect()
             ->route("schedules.holidays")
-            ->with("success", "Hari libur berhasil ditambahkan!");
+            ->with(
+                "success",
+                $created > 1
+                    ? "{$created} hari libur berhasil ditambahkan!"
+                    : "Hari libur berhasil ditambahkan!",
+            );
     }
 
     public function destroyHoliday(Holiday $holiday)

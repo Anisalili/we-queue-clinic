@@ -34,13 +34,26 @@
                         <form action="{{ route('schedules.holidays.store') }}" method="POST">
                             @csrf
 
-                            <div class="mb-3">
-                                <label for="date" class="form-label">Tanggal <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control @error('date') is-invalid @enderror"
-                                       id="date" name="date" value="{{ old('date') }}" required>
-                                @error('date')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="start_date" class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('start_date') is-invalid @enderror"
+                                           id="start_date" name="start_date" value="{{ old('start_date') }}"
+                                           min="{{ date('Y-m-d') }}" required>
+                                    @error('start_date')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="end_date" class="form-label">Tanggal Selesai</label>
+                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror"
+                                           id="end_date" name="end_date" value="{{ old('end_date') }}"
+                                           min="{{ date('Y-m-d') }}">
+                                    @error('end_date')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="text-muted">Kosongkan jika hanya 1 hari. Isi untuk rentang cuti (mis. 17 s/d 20).</small>
+                                </div>
                             </div>
 
                             <div class="mb-3">
@@ -140,4 +153,21 @@
         </div>
     </section>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+        if (startDate && endDate) {
+            startDate.addEventListener('change', function () {
+                endDate.min = startDate.value;
+                if (endDate.value && endDate.value < startDate.value) {
+                    endDate.value = startDate.value;
+                }
+            });
+        }
+    });
+</script>
+@endpush
 @endsection

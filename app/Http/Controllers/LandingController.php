@@ -46,8 +46,8 @@ class LandingController extends Controller
         ];
 
         $slotsLabel = $sessionEnded
-            ? "Slot Tersisa Besok"
-            : "Slot Tersisa Hari Ini";
+            ? "Kuota Tersisa Besok"
+            : "Kuota Tersisa Hari Ini";
 
         $scheduleInfo =
             "Jadwal " . $availabilityDate->translatedFormat("l, d F Y") . ": ";
@@ -63,7 +63,7 @@ class LandingController extends Controller
                 ) .
                 " - " .
                 Carbon::parse($schedule["end_time"], $timezone)->format("H:i") .
-                " WIB";
+                " WITA";
         } else {
             $scheduleInfo .= "Ikuti jadwal klinik.";
         }

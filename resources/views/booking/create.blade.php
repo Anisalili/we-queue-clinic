@@ -55,7 +55,7 @@
                                                         @if(!$dateInfo['can_book'])
                                                             <br><small class="text-danger">{{ $dateInfo['reason'] }}</small>
                                                         @else
-                                                            <br><small class="text-success">Tersedia {{ $dateInfo['available_slots'] }} slot</small>
+                                                            <br><small class="text-success">Tersedia {{ $dateInfo['available_slots'] }} kuota</small>
                                                         @endif
                                                     </div>
                                                     @if($dateInfo['can_book'])
@@ -98,7 +98,7 @@
                                         <span class="badge bg-primary me-2">Umum</span> Pasien dengan pembayaran mandiri
                                     </label>
                                 </div>
-                                <small class="text-muted">Antrian BPJS dan Umum digabung (FIFO)</small>
+                                <small class="text-muted">Nomor antrian BPJS dan Umum dipisah sesuai kategori</small>
                                 @error('patient_category')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -157,7 +157,7 @@
                         <h6><i class="bi bi-clock-history"></i> Jam Praktik</h6>
                         <hr>
                         <p class="small mb-1"><strong>Senin - Sabtu:</strong></p>
-                        <p class="small">08:00 - 15:00 WIB</p>
+                        <p class="small">08:00 - 15:00 WITA</p>
                         <p class="small mb-0 text-danger"><strong>Minggu:</strong> Tutup</p>
                     </div>
                 </div>

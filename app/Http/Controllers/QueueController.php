@@ -19,10 +19,12 @@ class QueueController extends Controller
         // Get today's queues grouped by status
         $today = today();
 
-        // Waiting queue (status: menunggu) - ordered by queue number
+        // Waiting queue (status: menunggu) - skipped patients move to the bottom
         $waitingQueue = Booking::with("user")
             ->whereDate("booking_date", $today)
             ->where("status", "menunggu")
+            ->orderByRaw("skipped_at IS NOT NULL")
+            ->orderBy("skipped_at", "asc")
             ->orderBy("queue_number", "asc")
             ->get();
 
@@ -106,10 +108,12 @@ class QueueController extends Controller
             ->where("status", "berlangsung")
             ->first();
 
-        // Next 5 in queue
+        // Next 5 in queue (skipped patients move to the bottom)
         $upcomingQueue = Booking::with("user")
             ->whereDate("booking_date", $today)
             ->where("status", "menunggu")
+            ->orderByRaw("skipped_at IS NOT NULL")
+            ->orderBy("skipped_at", "asc")
             ->orderBy("queue_number", "asc")
             ->limit(5)
             ->get();
@@ -145,9 +149,11 @@ class QueueController extends Controller
             );
         }
 
-        // Get next patient from waiting queue
+        // Get next patient from waiting queue (skipped patients are at the bottom)
         $nextPatient = Booking::whereDate("booking_date", today())
             ->where("status", "menunggu")
+            ->orderByRaw("skipped_at IS NOT NULL")
+            ->orderBy("skipped_at", "asc")
             ->orderBy("queue_number", "asc")
             ->first();
 
@@ -229,15 +235,17 @@ class QueueController extends Controller
             "skip_reason" => "nullable|string|max:500",
         ]);
 
-        // Add note to booking
+        // Mark as skipped: keep the queue number but move to the bottom of the list
         $booking->update([
+            "skipped_at" => now(),
             "notes" =>
                 "Dilewati: " . ($validated["skip_reason"] ?? "Belum hadir"),
         ]);
 
         return back()->with(
             "info",
-            "Pasien dilewati: " . $booking->formatted_queue_number,
+            "Pasien dilewati & dipindah ke bawah antrian: " .
+                $booking->formatted_queue_number,
         );
     }
 
@@ -251,6 +259,8 @@ class QueueController extends Controller
         $waitingQueue = Booking::with("user")
             ->whereDate("booking_date", $today)
             ->where("status", "menunggu")
+            ->orderByRaw("skipped_at IS NOT NULL")
+            ->orderBy("skipped_at", "asc")
             ->orderBy("queue_number", "asc")
             ->get();
 

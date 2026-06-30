@@ -145,7 +145,7 @@
                     @endif
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Slot Tersedia</span>
+                    <span class="text-muted">Kuota Tersedia</span>
                     <span class="fw-bold">{{ $today_slots['used'] }} / {{ $today_slots['max'] }}</span>
                 </div>
                 <div class="d-flex justify-content-between">

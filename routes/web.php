@@ -162,6 +162,14 @@ Route::middleware("auth")->group(function () {
                 ->middleware("permission:queue.manage")
                 ->name("finish-service");
 
+            // Edit queue number (mainly for BPJS - sync with Mobile JKN)
+            Route::post("/{booking}/queue-number", [
+                \App\Http\Controllers\BookingController::class,
+                "updateQueueNumber",
+            ])
+                ->middleware("permission:booking.update")
+                ->name("update-queue-number");
+
             // AJAX endpoint for checking slots
             Route::post("/check-slots", [
                 \App\Http\Controllers\BookingController::class,

@@ -106,7 +106,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Export to Excel (placeholder - requires maatwebsite/excel package)
+     * Export detailed report to a real Excel (.xlsx) file using PhpSpreadsheet
      */
     public function exportExcel(Request $request)
     {
@@ -115,54 +115,87 @@ class ReportController extends Controller
         $category = $request->input('category', null);
         $status = $request->input('status', null);
 
-        // TODO: Implement Excel export using maatwebsite/excel
-        // For now, return CSV
         $bookings = $this->reportService->getDetailedData($startDate, $endDate, $category, $status);
 
-        $filename = 'report-' . $startDate . '-to-' . $endDate . '.csv';
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Laporan Booking');
 
+        // Title row
+        $sheet->mergeCells('A1:J1');
+        $sheet->setCellValue('A1', 'LAPORAN KLINIK QLINIC - APOTEK ANNA FARMA');
+        $sheet->mergeCells('A2:J2');
+        $sheet->setCellValue('A2', 'Periode: ' . Carbon::parse($startDate)->translatedFormat('d M Y') . ' s/d ' . Carbon::parse($endDate)->translatedFormat('d M Y'));
+
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->getStyle('A1:A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        // Column headers (row 4)
+        $headerRow = 4;
         $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'No',
+            'Tanggal',
+            'No. Antrian',
+            'Nama Pasien',
+            'Kategori',
+            'Status',
+            'Tipe Booking',
+            'Waktu Check-in',
+            'Waktu Mulai',
+            'Waktu Selesai',
         ];
+        $col = 'A';
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . $headerRow, $header);
+            $col++;
+        }
 
-        $callback = function() use ($bookings) {
-            $file = fopen('php://output', 'w');
+        // Style header row
+        $sheet->getStyle("A{$headerRow}:J{$headerRow}")->applyFromArray([
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '4154F1'],
+            ],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        ]);
 
-            // Header
-            fputcsv($file, [
-                'Tanggal',
-                'No. Antrian',
-                'Nama Pasien',
-                'Kategori',
-                'Status',
-                'Tipe Booking',
-                'Waktu Check-in',
-                'Waktu Mulai',
-                'Waktu Selesai',
-                'Durasi (menit)',
-            ]);
+        // Data rows
+        $row = $headerRow + 1;
+        $no = 1;
+        foreach ($bookings as $booking) {
+            $sheet->setCellValue('A' . $row, $no++);
+            $sheet->setCellValue('B' . $row, $booking->booking_date->format('d/m/Y'));
+            $sheet->setCellValueExplicit('C' . $row, $booking->formatted_queue_number, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue('D' . $row, $booking->user->name);
+            $sheet->setCellValue('E' . $row, strtoupper($booking->patient_category));
+            $sheet->setCellValue('F' . $row, ucfirst($booking->status));
+            $sheet->setCellValue('G' . $row, ucfirst($booking->booking_type));
+            $sheet->setCellValue('H' . $row, $booking->check_in_time ? $booking->check_in_time->format('d/m/Y H:i') : '-');
+            $sheet->setCellValue('I' . $row, $booking->service_start_time ? $booking->service_start_time->format('d/m/Y H:i') : '-');
+            $sheet->setCellValue('J' . $row, $booking->service_end_time ? $booking->service_end_time->format('d/m/Y H:i') : '-');
+            $row++;
+        }
 
-            // Data
-            foreach ($bookings as $booking) {
-                fputcsv($file, [
-                    $booking->booking_date->format('Y-m-d'),
-                    $booking->formatted_queue_number,
-                    $booking->user->name,
-                    strtoupper($booking->patient_category),
-                    ucfirst($booking->status),
-                    ucfirst($booking->booking_type),
-                    $booking->check_in_time ? $booking->check_in_time->format('Y-m-d H:i:s') : '-',
-                    $booking->service_start_time ? $booking->service_start_time->format('Y-m-d H:i:s') : '-',
-                    $booking->service_end_time ? $booking->service_end_time->format('Y-m-d H:i:s') : '-',
-                    $booking->service_duration ?? '-',
-                ]);
-            }
+        // Borders for the whole table
+        $lastRow = max($row - 1, $headerRow);
+        $sheet->getStyle("A{$headerRow}:J{$lastRow}")->getBorders()->getAllBorders()
+            ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            fclose($file);
-        };
+        // Auto-size columns
+        foreach (range('A', 'J') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
 
-        return response()->stream($callback, 200, $headers);
+        $filename = 'laporan-klinik-' . $startDate . '-sd-' . $endDate . '.xlsx';
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
     /**

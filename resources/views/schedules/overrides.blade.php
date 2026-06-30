@@ -40,7 +40,7 @@
                                 <th>Hari</th>
                                 <th>Status</th>
                                 <th>Jam Praktik</th>
-                                <th>Kuota Slot</th>
+                                <th>Kuota</th>
                                 <th>Alasan</th>
                                 <th>Aksi</th>
                             </tr>

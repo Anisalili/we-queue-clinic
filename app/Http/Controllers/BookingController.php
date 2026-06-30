@@ -124,8 +124,11 @@ class BookingController extends Controller
             return back()->with("error", $canBook["reason"])->withInput();
         }
 
-        // Get next queue number
-        $queueNumber = Booking::getNextQueueNumber($validated["booking_date"]);
+        // Get next queue number (separate sequence per category: BPJS / Umum)
+        $queueNumber = Booking::getNextQueueNumber(
+            $validated["booking_date"],
+            $validated["patient_category"],
+        );
 
         // Create booking
         $booking = Booking::create([
@@ -364,5 +367,48 @@ class BookingController extends Controller
             "available_slots" => $canBook["available_slots"] ?? 0,
             "schedule" => $canBook["schedule"] ?? null,
         ]);
+    }
+
+    /**
+     * Update a booking's queue number (mainly BPJS, to sync with Mobile JKN)
+     */
+    public function updateQueueNumber(Request $request, Booking $booking)
+    {
+        $validated = $request->validate(
+            [
+                "queue_number" => "required|integer|min:1|max:999",
+            ],
+            [
+                "queue_number.required" => "Nomor antrian wajib diisi.",
+                "queue_number.integer" => "Nomor antrian harus berupa angka.",
+            ],
+        );
+
+        // Ensure the new number is unique within the same date & category
+        $exists = Booking::whereDate("booking_date", $booking->booking_date)
+            ->where("patient_category", $booking->patient_category)
+            ->where("queue_number", $validated["queue_number"])
+            ->where("id", "!=", $booking->id)
+            ->exists();
+
+        if ($exists) {
+            return back()->with(
+                "error",
+                "Nomor antrian " .
+                    str_pad($validated["queue_number"], 3, "0", STR_PAD_LEFT) .
+                    " sudah dipakai pasien " .
+                    strtoupper($booking->patient_category) .
+                    " lain pada tanggal yang sama.",
+            );
+        }
+
+        $booking->update(["queue_number" => $validated["queue_number"]]);
+
+        return back()->with(
+            "success",
+            "Nomor antrian berhasil diubah menjadi " .
+                $booking->fresh()->formatted_queue_number .
+                ".",
+        );
     }
 }

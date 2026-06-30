@@ -78,30 +78,30 @@
                             </tr>
                             <tr>
                                 <td><strong>Dibuat</strong></td>
-                                <td>: {{ $booking->created_at->format('d M Y, H:i') }} WIB</td>
+                                <td>: {{ $booking->created_at->format('d M Y, H:i') }} WITA</td>
                             </tr>
                             @if($booking->check_in_time)
                             <tr>
                                 <td><strong>Check-in</strong></td>
-                                <td>: {{ $booking->check_in_time->format('d M Y, H:i') }} WIB</td>
+                                <td>: {{ $booking->check_in_time->format('d M Y, H:i') }} WITA</td>
                             </tr>
                             @endif
                             @if($booking->service_start_time)
                             <tr>
                                 <td><strong>Mulai Pelayanan</strong></td>
-                                <td>: {{ $booking->service_start_time->format('d M Y, H:i') }} WIB</td>
+                                <td>: {{ $booking->service_start_time->format('d M Y, H:i') }} WITA</td>
                             </tr>
                             @endif
                             @if($booking->service_end_time)
                             <tr>
                                 <td><strong>Selesai Pelayanan</strong></td>
-                                <td>: {{ $booking->service_end_time->format('d M Y, H:i') }} WIB</td>
+                                <td>: {{ $booking->service_end_time->format('d M Y, H:i') }} WITA</td>
                             </tr>
                             @endif
                             @if($booking->cancelled_at)
                             <tr>
                                 <td><strong>Dibatalkan</strong></td>
-                                <td>: {{ $booking->cancelled_at->format('d M Y, H:i') }} WIB</td>
+                                <td>: {{ $booking->cancelled_at->format('d M Y, H:i') }} WITA</td>
                             </tr>
                             <tr>
                                 <td><strong>Alasan Pembatalan</strong></td>

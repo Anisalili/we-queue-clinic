@@ -68,6 +68,27 @@
         .section {
             margin-bottom: 25px;
         }
+        .two-col {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            margin-bottom: 25px;
+        }
+        .col-half {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-right: 15px;
+        }
+        .col-half:last-child {
+            padding-right: 0;
+            padding-left: 15px;
+        }
+        table.data-table.compact th,
+        table.data-table.compact td {
+            padding: 5px 6px;
+            font-size: 10px;
+        }
         .section h2 {
             font-size: 16px;
             color: #435ebe;
@@ -173,96 +194,85 @@
         </div>
     </div>
 
-    <div class="section">
-        <h2>Ringkasan Status</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th style="text-align: center;">Jumlah</th>
-                    <th style="text-align: center;">Persentase</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $total = $summary['total_patients'] ?? 0;
-                @endphp
-                <tr>
-                    <td><span class="badge badge-warning">Booking</span></td>
-                    <td style="text-align: center;">{{ $summary['status_breakdown']['booking'] ?? 0 }}</td>
-                    <td style="text-align: center;">
-                        {{ $total > 0 ? round((($summary['status_breakdown']['booking'] ?? 0) / $total) * 100, 2) : 0 }}%
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-primary">Menunggu</span></td>
-                    <td style="text-align: center;">{{ $summary['status_breakdown']['menunggu'] ?? 0 }}</td>
-                    <td style="text-align: center;">
-                        {{ $total > 0 ? round((($summary['status_breakdown']['menunggu'] ?? 0) / $total) * 100, 2) : 0 }}%
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-primary">Berlangsung</span></td>
-                    <td style="text-align: center;">{{ $summary['status_breakdown']['berlangsung'] ?? 0 }}</td>
-                    <td style="text-align: center;">
-                        {{ $total > 0 ? round((($summary['status_breakdown']['berlangsung'] ?? 0) / $total) * 100, 2) : 0 }}%
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-success">Selesai</span></td>
-                    <td style="text-align: center;"><strong>{{ $summary['status_breakdown']['selesai'] ?? 0 }}</strong></td>
-                    <td style="text-align: center;">
-                        <strong>{{ $total > 0 ? round((($summary['status_breakdown']['selesai'] ?? 0) / $total) * 100, 2) : 0 }}%</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-danger">Batal</span></td>
-                    <td style="text-align: center;">{{ $summary['status_breakdown']['batal'] ?? 0 }}</td>
-                    <td style="text-align: center;">
-                        {{ $total > 0 ? round((($summary['status_breakdown']['batal'] ?? 0) / $total) * 100, 2) : 0 }}%
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    @php
+        $total = $summary['total_patients'] ?? 0;
+        $completionRate = $total > 0 ? round((($summary['total_completed'] ?? 0) / $total) * 100, 2) : 0;
+    @endphp
 
-    <div class="section">
-        <h2>Metrik Kinerja</h2>
-        <table style="width: 100%; margin-top: 10px;">
-            <tr>
-                <td style="padding: 10px;">
-                    <strong>Tingkat Pembatalan:</strong><br>
+    <div class="two-col">
+        <!-- Left: Ringkasan Status -->
+        <div class="col-half">
+            <div class="section">
+                <h2>Ringkasan Status</h2>
+                <table class="data-table compact">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th style="text-align: center;">Jumlah</th>
+                            <th style="text-align: center;">%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-warning">Booking</span></td>
+                            <td style="text-align: center;">{{ $summary['status_breakdown']['booking'] ?? 0 }}</td>
+                            <td style="text-align: center;">{{ $total > 0 ? round((($summary['status_breakdown']['booking'] ?? 0) / $total) * 100, 1) : 0 }}%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-primary">Menunggu</span></td>
+                            <td style="text-align: center;">{{ $summary['status_breakdown']['menunggu'] ?? 0 }}</td>
+                            <td style="text-align: center;">{{ $total > 0 ? round((($summary['status_breakdown']['menunggu'] ?? 0) / $total) * 100, 1) : 0 }}%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-primary">Berlangsung</span></td>
+                            <td style="text-align: center;">{{ $summary['status_breakdown']['berlangsung'] ?? 0 }}</td>
+                            <td style="text-align: center;">{{ $total > 0 ? round((($summary['status_breakdown']['berlangsung'] ?? 0) / $total) * 100, 1) : 0 }}%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-success">Selesai</span></td>
+                            <td style="text-align: center;"><strong>{{ $summary['status_breakdown']['selesai'] ?? 0 }}</strong></td>
+                            <td style="text-align: center;"><strong>{{ $total > 0 ? round((($summary['status_breakdown']['selesai'] ?? 0) / $total) * 100, 1) : 0 }}%</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-danger">Batal</span></td>
+                            <td style="text-align: center;">{{ $summary['status_breakdown']['batal'] ?? 0 }}</td>
+                            <td style="text-align: center;">{{ $total > 0 ? round((($summary['status_breakdown']['batal'] ?? 0) / $total) * 100, 1) : 0 }}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right: Metrik Kinerja -->
+        <div class="col-half">
+            <div class="section">
+                <h2>Metrik Kinerja</h2>
+                <div style="margin-bottom: 12px;">
+                    <strong>Tingkat Pembatalan:</strong>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: {{ min($summary['cancellation_rate'] ?? 0, 100) }}%; background: #dc3545;">
                             {{ $summary['cancellation_rate'] ?? 0 }}%
                         </div>
                     </div>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px;">
-                    <strong>Tingkat No-Show:</strong><br>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <strong>Tingkat No-Show:</strong>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: {{ min($summary['no_show_rate'] ?? 0, 100) }}%; background: #ffc107; color: black;">
                             {{ $summary['no_show_rate'] ?? 0 }}%
                         </div>
                     </div>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px;">
-                    <strong>Completion Rate:</strong><br>
-                    @php
-                        $completionRate = $total > 0 ? round((($summary['total_completed'] ?? 0) / $total) * 100, 2) : 0;
-                    @endphp
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <strong>Completion Rate:</strong>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: {{ $completionRate }}%; background: #198754;">
                             {{ $completionRate }}%
                         </div>
                     </div>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="footer">

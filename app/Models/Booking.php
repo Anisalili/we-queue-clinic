@@ -26,6 +26,7 @@ class Booking extends Model
         "cancelled_at",
         "cancellation_reason",
         "notes",
+        "skipped_at",
     ];
 
     protected $casts = [
@@ -34,6 +35,7 @@ class Booking extends Model
         "service_start_time" => "datetime",
         "service_end_time" => "datetime",
         "cancelled_at" => "datetime",
+        "skipped_at" => "datetime",
     ];
 
     /**
@@ -158,11 +160,16 @@ class Booking extends Model
     /**
      * Static methods
      */
-    public static function getNextQueueNumber($date)
+    public static function getNextQueueNumber($date, $category = null)
     {
-        $lastBooking = self::whereDate("booking_date", $date)
-            ->orderBy("queue_number", "desc")
-            ->first();
+        $query = self::whereDate("booking_date", $date);
+
+        // BPJS and Umum each have their own queue numbering sequence
+        if ($category) {
+            $query->where("patient_category", $category);
+        }
+
+        $lastBooking = $query->orderBy("queue_number", "desc")->first();
 
         return $lastBooking ? $lastBooking->queue_number + 1 : 1;
     }
@@ -284,7 +291,7 @@ class Booking extends Model
         if ($availableSlots <= 0) {
             return [
                 "can_book" => false,
-                "reason" => "Slot penuh",
+                "reason" => "Kuota penuh",
             ];
         }
 

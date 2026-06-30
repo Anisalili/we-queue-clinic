@@ -61,9 +61,9 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-muted mb-1">Slot Utilization</h6>
+                        <h6 class="text-muted mb-1">Utilisasi Kuota</h6>
                         <h3 class="mb-0">{{ $kpi['slot_utilization'] ?? 0 }}%</h3>
-                        <small class="text-muted">Penggunaan slot</small>
+                        <small class="text-muted">Penggunaan kuota</small>
                     </div>
                     <div class="avatar bg-light-info">
                         <i class="bi bi-pie-chart fs-3"></i>

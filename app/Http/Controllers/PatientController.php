@@ -86,8 +86,11 @@ class PatientController extends Controller
                 ->withInput();
         }
 
-        // Get next queue number
-        $queueNumber = Booking::getNextQueueNumber(today());
+        // Get next queue number (separate sequence per category: BPJS / Umum)
+        $queueNumber = Booking::getNextQueueNumber(
+            today(),
+            $validated["patient_category"],
+        );
 
         // Create booking with walk-in type and status menunggu (already present)
         $booking = Booking::create([

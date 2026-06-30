@@ -61,7 +61,7 @@
                                 <th>Status</th>
                                 <th>Jam Mulai</th>
                                 <th>Jam Selesai</th>
-                                <th>Kuota Slot</th>
+                                <th>Kuota</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -149,7 +149,7 @@
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label class="form-label">Kuota Slot <span class="text-danger">*</span></label>
+                                                        <label class="form-label">Kuota <span class="text-danger">*</span></label>
                                                         <input type="number" class="form-control" name="max_slots"
                                                                value="{{ $schedule->max_slots }}"
                                                                min="1" max="100" required>
@@ -204,7 +204,7 @@
                                 <th>Tanggal</th>
                                 <th>Status</th>
                                 <th>Jam</th>
-                                <th>Slot</th>
+                                <th>Kuota</th>
                                 <th>Alasan</th>
                             </tr>
                         </thead>

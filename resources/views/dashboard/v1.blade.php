@@ -20,6 +20,33 @@
         </div>
 
         <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="bi bi-info-circle"></i> Cara Booking Online</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Ikuti langkah berikut untuk membuat janji kunjungan ke klinik:</p>
+                        <ol class="mb-3 ps-3" style="line-height: 1.9;">
+                            <li>Buka menu <strong>Booking &rarr; Buat Booking</strong> di sidebar.</li>
+                            <li>Pilih <strong>kategori pasien</strong> (BPJS atau Umum).</li>
+                            <li>Pilih <strong>tanggal kunjungan</strong> yang tersedia (maksimal 7 hari ke depan).</li>
+                            <li>Klik <strong>Booking</strong> untuk mendapatkan <strong>nomor antrian</strong> secara otomatis.</li>
+                            <li>Datang ke klinik tepat waktu lalu <strong>check-in di resepsionis</strong> agar masuk ke antrian.</li>
+                        </ol>
+                        <div class="alert alert-warning mb-0">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Anda hanya boleh memiliki <strong>1 booking aktif</strong> dalam satu waktu. Pembatalan mandiri minimal <strong>2 jam</strong> sebelum jadwal.
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ route('booking.create') }}" class="btn btn-primary"><i class="bi bi-calendar-plus"></i> Buat Booking Sekarang</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-6 col-lg-3 col-md-6">
                 <div class="card">
                     <div class="card-body px-4 py-4-5">
@@ -61,7 +88,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>Status Antrian Hari Ini</h4>
-                        <small class="text-muted">Diperbarui {{ now()->format('H:i') }} WIB</small>
+                        <small class="text-muted">Diperbarui {{ now()->format('H:i') }} WITA</small>
                     </div>
                     <div class="card-body">
                         @if($activeBooking)
@@ -132,7 +159,7 @@
                         <div class="alert alert-info d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <div>
                                 <strong>Belum ada booking untuk hari ini.</strong>
-                                <div class="text-muted">Buat booking baru untuk mendapatkan nomor antrian.</div>
+                                <div class="text-dark">Buat booking baru untuk mendapatkan nomor antrian.</div>
                             </div>
                             <a href="{{ route('booking.create') }}" class="btn btn-primary btn-sm">Buat Booking</a>
                         </div>

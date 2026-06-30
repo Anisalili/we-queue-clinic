@@ -15,6 +15,9 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
+                    <div class="auth-logo mb-4">
+                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="height: 90px; width: auto;">
+                    </div>
                     <h1 class="auth-title">Sign Up</h1>
                     <p class="auth-subtitle mb-4">Daftar sebagai pasien baru.</p>
 
@@ -61,12 +64,14 @@
                             <input type="text"
                                    name="phone"
                                    class="form-control form-control-xl @error('phone') is-invalid @enderror"
-                                   placeholder="No. HP (08xxx)"
+                                   placeholder="No. HP (cth: 6281234567890)"
                                    value="{{ old('phone') }}"
+                                   required
                                    autocomplete="tel">
                             <div class="form-control-icon">
                                 <i class="bi bi-phone"></i>
                             </div>
+                            <small class="text-muted">Gunakan format internasional diawali <strong>62</strong> (bukan 08). Contoh: 6281234567890</small>
                             @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

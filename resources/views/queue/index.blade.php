@@ -81,7 +81,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Mulai Dilayani</strong></td>
-                                <td>: {{ $servingNow->service_start_time->format('H:i') }} WIB</td>
+                                <td>: {{ $servingNow->service_start_time->format('H:i') }} WITA</td>
                             </tr>
                             <tr>
                                 <td><strong>Durasi</strong></td>
@@ -162,9 +162,15 @@
                         </thead>
                         <tbody>
                             @foreach($waitingQueue as $queue)
-                            <tr>
+                            <tr class="{{ $queue->skipped_at ? 'table-warning' : '' }}">
                                 <td>
                                     <span class="badge bg-light-primary text-primary fs-4 px-3 py-2">{{ $queue->formatted_queue_number }}</span>
+                                    @if($loop->first)
+                                        <br><span class="badge bg-success mt-1">Giliran berikutnya</span>
+                                    @endif
+                                    @if($queue->skipped_at)
+                                        <br><span class="badge bg-warning text-dark mt-1"><i class="bi bi-skip-forward"></i> Dilewati</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <strong>{{ $queue->user->name }}</strong>
@@ -172,14 +178,16 @@
                                 </td>
                                 <td>{!! $queue->category_badge !!}</td>
                                 <td>
-                                    <small>{{ $queue->check_in_time->format('H:i') }}</small>
+                                    <small>{{ $queue->check_in_time->format('H:i') }} WITA</small>
                                 </td>
                                 <td>
+                                    @php $isLocked = $servingNow || !$loop->first; @endphp
                                     <div class="btn-group" role="group">
                                         <button type="button"
                                                 class="btn btn-sm btn-primary"
                                                 onclick="callPatient{{ $queue->id }}()"
-                                                {{ $servingNow ? 'disabled' : '' }}>
+                                                {{ $isLocked ? 'disabled' : '' }}
+                                                @if($isLocked && !$servingNow) title="Hanya antrian giliran berikutnya yang bisa dipanggil" @endif>
                                             <i class="bi bi-megaphone"></i> Panggil
                                         </button>
                                         <button type="button"

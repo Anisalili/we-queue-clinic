@@ -267,7 +267,7 @@
                         <div class="col-xl-7 col-lg-9 col-md-8">
                             <div class="wantToWork-caption wantToWork-caption2">
                                 <h2>Status Antrian Hari Ini</h2>
-                                <p>Pantau kapasitas klinik, pasien dalam antrian, dan sisa slot. ({{ $today }})</p>
+                                <p>Pantau kapasitas klinik, pasien dalam antrian, dan sisa kuota. ({{ $today }})</p>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4">

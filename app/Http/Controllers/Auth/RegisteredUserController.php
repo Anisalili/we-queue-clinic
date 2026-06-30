@@ -39,8 +39,17 @@ class RegisteredUserController extends Controller
                 "max:255",
                 "unique:" . User::class,
             ],
-            "phone" => ["nullable", "string", "max:20"],
+            "phone" => [
+                "required",
+                "string",
+                "max:20",
+                "regex:/^62[0-9]{8,15}$/",
+            ],
             "password" => ["required", "confirmed", Rules\Password::defaults()],
+        ], [
+            "phone.regex" =>
+                "Nomor HP harus diawali 62 (bukan 08). Contoh: 6281234567890.",
+            "phone.required" => "Nomor HP wajib diisi.",
         ]);
 
         $user = User::create([
