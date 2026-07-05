@@ -35,7 +35,7 @@ class PatientController extends Controller
                 "required_if:is_new_patient,1|email|unique:users,email," .
                 $request->user_id,
             "phone" => "required|string|max:20",
-            "date_of_birth" => "nullable|date",
+            "date_of_birth" => "nullable|date|before_or_equal:today",
             "address" => "nullable|string",
             "patient_category" => "required|in:bpjs,umum",
             "notes" => "nullable|string|max:500",

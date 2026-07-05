@@ -16,9 +16,6 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
-                    <div class="auth-logo mb-4">
-                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="height: 90px; width: auto;">
-                    </div>
                     <h1 class="auth-title">Masuk.</h1>
                     <p class="auth-subtitle mb-4">Masuk dengan email dan password Anda.</p>
 
@@ -75,10 +72,18 @@
                             <p class="mb-0"><a class="font-bold" href="{{ route('password.request') }}">Lupa password?</a></p>
                         </div>
                     @endif
+
+                    <div class="text-center mt-3">
+                        <p class="text-gray-600 mb-0">Belum punya akun? <a href="{{ route('register') }}" class="font-bold">Daftar di sini</a>.</p>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-7 d-none d-lg-block">
-                <div id="auth-right"></div>
+                <div id="auth-right" class="d-flex align-items-center justify-content-center">
+                    <div class="bg-white rounded-4 shadow-lg p-5 text-center" style="max-width: 480px;">
+                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="width: 100%; max-width: 360px; height: auto;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

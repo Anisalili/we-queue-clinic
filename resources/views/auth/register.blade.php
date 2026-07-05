@@ -15,9 +15,6 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
-                    <div class="auth-logo mb-4">
-                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="height: 90px; width: auto;">
-                    </div>
                     <h1 class="auth-title">Sign Up</h1>
                     <p class="auth-subtitle mb-4">Daftar sebagai pasien baru.</p>
 
@@ -60,7 +57,7 @@
                         </div>
 
                         <!-- Phone -->
-                        <div class="form-group position-relative has-icon-left mb-4">
+                        <div class="form-group position-relative has-icon-left mb-2">
                             <input type="text"
                                    name="phone"
                                    class="form-control form-control-xl @error('phone') is-invalid @enderror"
@@ -71,11 +68,11 @@
                             <div class="form-control-icon">
                                 <i class="bi bi-phone"></i>
                             </div>
-                            <small class="text-muted">Gunakan format internasional diawali <strong>62</strong> (bukan 08). Contoh: 6281234567890</small>
                             @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <small class="d-block text-muted mb-4" style="line-height: 1.4;">Gunakan format internasional diawali <strong>62</strong> (bukan 08). Contoh: 6281234567890</small>
 
                         <!-- Password -->
                         <div class="form-group position-relative has-icon-left mb-4">
@@ -115,7 +112,11 @@
                 </div>
             </div>
             <div class="col-lg-7 d-none d-lg-block">
-                <div id="auth-right"></div>
+                <div id="auth-right" class="d-flex align-items-center justify-content-center">
+                    <div class="bg-white rounded-4 shadow-lg p-5 text-center" style="max-width: 480px;">
+                        <img src="{{ asset('assets/images/logo/qlinic.png') }}" alt="Qlinic - Apotek Anna Farma" style="width: 100%; max-width: 360px; height: auto;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

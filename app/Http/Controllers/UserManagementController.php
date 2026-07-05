@@ -45,7 +45,7 @@ class UserManagementController extends Controller
             ],
             "phone" => ["nullable", "string", "max:20"],
             "address" => ["nullable", "string"],
-            "date_of_birth" => ["nullable", "date"],
+            "date_of_birth" => ["nullable", "date", "before_or_equal:today"],
             "password" => ["required", "confirmed", Rules\Password::defaults()],
             "role" => ["required", "exists:roles,name"],
         ]);
@@ -102,7 +102,7 @@ class UserManagementController extends Controller
             ],
             "phone" => ["nullable", "string", "max:20"],
             "address" => ["nullable", "string"],
-            "date_of_birth" => ["nullable", "date"],
+            "date_of_birth" => ["nullable", "date", "before_or_equal:today"],
             "password" => ["nullable", "confirmed", Rules\Password::defaults()],
             "role" => ["required", "exists:roles,name"],
         ]);
